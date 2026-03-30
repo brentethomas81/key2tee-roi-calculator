@@ -552,6 +552,24 @@
   @media (max-width: 720px) {
     .calendly-bar { font-size: 0.74rem; padding: 9px 14px; }
   }
+
+/* ── AGENT CARD ── */
+.agent-card {
+  background: linear-gradient(135deg, #0d1a10 0%, #1a2e1e 60%, #162813 100%);
+  border-bottom: 1px solid var(--gold-dim);
+  display: flex; align-items: center; justify-content: center;
+  gap: 16px; padding: 12px 32px;
+}
+.agent-card img { width: 58px; height: 58px; border-radius: 50%; border: 2px solid var(--gold); object-fit: cover; flex-shrink: 0; }
+.agent-info { display: flex; flex-direction: column; gap: 2px; }
+.agent-name { font-family: 'Cormorant Garamond', serif; font-size: 1.15rem; font-weight: 700; color: var(--gold-light); }
+.agent-details { font-size: 0.78rem; color: var(--text-light); }
+.agent-phone { font-size: 0.85rem; font-weight: 500; color: var(--cream); }
+@media (max-width: 720px) {
+  .agent-card { padding: 10px 16px; gap: 12px; }
+  .agent-card img { width: 48px; height: 48px; }
+  .agent-name { font-size: 1rem; }
+}
 </style>
 </head>
 <body>
@@ -559,6 +577,14 @@
 <a href="https://calendly.com/key2teerealestate/30min" target="_blank" class="calendly-bar">
   📅 &nbsp;Ready to talk numbers in real life? &nbsp;<strong>Book a free 30-min call with Brent</strong>&nbsp; →
 </a>
+<div class="agent-card">
+  <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAA4KCw0LCQ4NDA0QDw4RFiQXFhQUFiwgIRokNC43NjMuMjI6QVNGOj1OPjIySGJJTlZYXV5dOEVmbWVabFNbXVn/2wBDAQ8QEBYTFioXFypZOzI7WVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVn/wAARCACWAJYDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwDzzGHI9DTh1p1yuy6kX/apoqQNDSh/pa10epr/AKGPpXO6T/x9rXS6oP8AQvwoQM5CBBJLtNdPp2jQzICwBrnbONvPH1rs9OYxRDOeKTaQWZzmv6dHaDcgANYI611viFTcDBYKCax47eONMgjI6ZHNHMhqLKKwyHohqRIJBzsNWfNLAqIyHHUHjNMV3LZUfnRcdi9pwrVArFt5vLkDMSmTz6VurtdA6HIP6UJiaEAq3bD5argVathxTEdhoQxar9Kv3P3DVLRP+PRfpV64+4aokg0//WSVoVnWLYlcY61oUDQtFJRQM8Wa1tZXLsRk07+z7UjgrXOq8g6O351Isso/5aNUga9vFHFfqENdJcQia2APTFcjphJvVLHJrq75mSzypwcUAyjDpkUbAhh1rURkRMbxXFtf3Ksfn70sV/dSTIgbJZgKTimNM2phLqGorHCM88egA71tQeG4CoMzOz+uan0a0WGMy4G+Q4+gFbsagDkVk3qdUUrHNy+HIlAMbHjpmom0WJDyOvaunlIAxVC6+9xSbZSijm59OhOV21ThE+nT+SDvgbkA9vpW1NxJzUl3YiexjdcbkGT+dVEyqJFTqAR0IzzVq2HFRNHsgQ9PmIqa26VojnOw0Uf6Iv0q5c/cNVdG/wCPRfpVu4+4askgseJX96v1Qs+JG+tX80DQUUZooGfOwVsZxTgcVvX1qiO4CjjFYkwCykCkndAXNL/4+1rq78f6CPpXKaX/AMfaV1eoH/QfwqRnFSDLn61JY/u763f0kX+dRHJlI96v6dZzXF7AFQYDBiScDA5NDYutj0W1A24XoKu7lRcuwA9ScVSRTHG/ljnqM1mahc20QYOk91KvVY+Qp9PSsep2dDYmZW+ZWBFVru4jRAWPGMmqWkyPcsQ8bxqPXtWbr5livkgQFkY5x0oKvZEr3lu7kBxmte1+az4IIIrn5zPGfK+xwmPA+ZTgmr2jXC5Eak7Rzg9vUVcdDCepd1KMLbRlRwH5/Kq1uOKNTvUgeOGVTsduSOqnoD9KdbjAq0zFpo7DR/8Aj0X6Vbn+7VTSP+PRfpVub7tWQQ2o+dvrVw1Vth8x+tWqBoSijFFIZ4/d/NcSfQVz95xcMK3bx8TN7isC5O6djSj8IPct6X/x9JXW33/Hj+Fcnpf/AB9JXWXnNj+FJjOStgrXBDetdnptpFJalQBllxzXKWtsz3GFHJNdbY21zCqnggEUboE+Vpm3CAHZO1Oe3UR7UOxT120n3ZN2eq5qO6vRBATgE1gd2+w6G1itlIjByepNZGvIHfdjlPmFXkujDCj3IbL88DOPb2rF1PV7ZpmIDEEdMfpTSFLYsRQxSxhyM4GetPtFAuNwXAFZOn3hO9cEJn5AewrSsZ8swPc00tSJWsVddZhqMaswMc0Y+XHQg/44rRg71DqMMct7GxwTGAffvgfnU1v0q4mE3okdfpP/AB6rVm4cKtVNKbFsv0pL2T5sCtTEnt5lBOTVkzIBksKpWUIf5mqxLaRuOmKQ0OS6ifOHHHvRUAsIwOlFK4zzCa2SViS3aqp0qFmLE1jf2lcf3qUahcH+OjXYZpR26QXiBa6ZlVrYbumK4+ykeS7Quc11lySLEY64qWMggFvBLvGM1pjWIEQDiuCnmlEjfOetV2mk7u350yT0m01GO7lZFPIGQM068UFVLAlVOSB1PtXn2lXkttqdvIrE/OFIJ6g8V6Mkm/jHIPNZTVmdVKV1YjjuzMWjWCbevUMu3+fWsnU4Uhj+e3dSD94kc/rW9OfkyEV/Y1h3lw5JVYUB9cU0aNGRaFpbjEcbKo4ywxWrEAl1sHZqrruQhj1JzUtkS07SP2P60GT2Lt0d07e2BUtv0qCZg074Izxn8qsW/wB2tEc7On0v/j3FMu/9bUmlj/RxTbsfvRVEF+zGIxVhqht/9UtS55oY0Haig0VNxnzwylGIPBFKtW9Wi8q8IxwaqCqA0NO/4+Urrbj/AI8fwrkdO/4+Urr5v+PMVDKOaj0uW6kcrwAaZJo0kblXzXU6U8FvHK87oi56scVmarrcDzn7IvmY43MMCqs3sTcw5dPa2KyFsYII+td85OxLiPkOoJ964Ce5knk8yVskdPQV1ugX4ki+ySkblHyZ7r6fhRUg+W5pSlrY2Eu4mTJYZ7is65niKsxKgA0t7pwkBMb7PbtXPXVjcRklyCPqaxSN3Novm4E2duMdqatwqsAGwq9TWeJRDFjPNZ88ryYiQ43HFWlfQycurNE6mf7SjuB/qpwy49QDwa6PTrmK5TMTgnuvcVw16wWW3Rf+Wa/1ppnkicPG7KwOQQcVu4o5kz2vS/8Aj3FNux+9Feb6P421GwxHMEuovRxhvzFdRa+LdO1F1DlraQ9pOn51NhnYQEeWKfkZqK1IaFWVgykcEHINTbaTQ0ITRSlKKmwzxXxPb+XMrYrDWuz8X26mDIIJFcikYXryau1xJlmwYJMrMcKO9bN5raeQIrdSzD+JulYNFVyILj5ZnmfdIxY+9NHSm04E4561YhG+630rRRmASSM4dcMprPP3TS3Vy0dtEsZwzqCSOoFNNJO4ne6sdtp+pLewiedrgYNRahEzrwVxXHWV3cW6qYyevpniujtrn7Yi54J6g1yyhy69DpjUUtCjJbY3SO+VA/CqSKPML0ms6iZpWtoDiGM4JH8R9fpWfazNE5BPyHr7VrTVtzGo76IfdNuu3I7YFMJzSE7nZvU0uKohCcDFSAkUwLg5PJp9AzV0zXtQ0w4tbmSNT1XOR+RrrtJ8fuGVNSiV0P8Ay0iGGH1HQ154ADjFSKeSKAR7vYanZ6lF5lnOkoHUD1+ooqDRPDWn6HCq2sIEo+/Meqe/qKKkofqZHkpJ3VgR+FYuQbg+7CtrX8raQSjoy8/nWJ0nf1EbQ2VuxbJYZ4qTvTl6VIFqFiQJqlVf3+KnkGMYqoT8/FXEhl0f3oqKbiikM5GCLfwat/Zv9qm2kJNxg960fsRpMpRRuY0LbyNFmFzFGh5kbs3oBUaWk0suyON5HPQKMmuqsrdNqbuTU0ttpCyqzuN2egNFmSm2zBitXFt87ZkHTJ4H0qJLSZ32IrFj2zXdpbq1sFIGMVVFjDaxCKNFVRQBx1vZSLchWU7QOSfSugtIVSEYHbFMkRVuBtAFSx8LiqWiJbuNvo/mB4+7YNRLR1k8w56VqW4JHAqH7E7EMQKV2Oyb1MhW3Pt71Mz9s1D5BjLtn5qkAzj8KkBDgg1PYzNBdwyKcbXDfkagPAqXTl33kfuaGDWh6VHqCTpuikRs+h5opkekWUSYCyE+plkP8ARRUXRpZmVrJ/0K3c9TKB+gNYx4uPoK1tWbfBak9A5A/75NZXSTjuaqW5a2IQMVBP3hUwjHOM0/GFxUQ6moGDnCoMVHPFa0xyQVFPFABbziOfipwcxgelVYl2XCt7VYccHHpWiA0JBvjUkVRkBzVzT5Ek+RzgjjBqWezjB3Ky8+wqkZyikzJYYNJWxNFGCenFZjrgk9KcXcHFrY//9k=" alt="Brent Thomas" />
+  <div class="agent-info">
+    <span class="agent-name">Brent Thomas</span>
+    <span class="agent-details">REALTOR&#174; &nbsp;|&nbsp; Key2Tee Real Estate &nbsp;|&nbsp; Douglas Elliman</span>
+    <span class="agent-phone">&#128222; &nbsp;<a href="tel:7023191432" style="color:inherit;text-decoration:none;">(702) 319-1432</a></span>
+  </div>
+</div>
 <header>
   <div class="logo-ring"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="54" height="54">
   <circle cx="100" cy="100" r="100" fill="#000000"/>
