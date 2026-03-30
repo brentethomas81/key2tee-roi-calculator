@@ -530,10 +530,35 @@
     pointer-events: none;
     box-shadow: 0 4px 12px rgba(0,0,0,0.5);
   }
+
+  /* ── CALENDLY BAR ── */
+  .calendly-bar {
+    display: block;
+    background: linear-gradient(135deg, var(--gold-dim) 0%, var(--gold) 100%);
+    color: var(--forest);
+    text-align: center;
+    padding: 10px 20px;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    text-decoration: none;
+    transition: opacity 0.2s;
+    position: sticky;
+    top: 0;
+    z-index: 101;
+  }
+  .calendly-bar:hover { opacity: 0.9; }
+  @media (max-width: 720px) {
+    .calendly-bar { font-size: 0.74rem; padding: 9px 14px; }
+  }
 </style>
 </head>
 <body>
 
+<a href="https://calendly.com/key2teerealestate/30min" target="_blank" class="calendly-bar">
+  📅 &nbsp;Ready to talk numbers in real life? &nbsp;<strong>Book a free 30-min call with Brent</strong>&nbsp; →
+</a>
 <header>
   <div class="logo-ring"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="54" height="54">
   <circle cx="100" cy="100" r="100" fill="#000000"/>
