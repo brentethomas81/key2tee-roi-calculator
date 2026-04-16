@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>Key2Tee | Property ROI Calculator</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -19,9 +19,12 @@
     --red: #c0392b;
     --green-bright: #27ae60;
     --text-light: rgba(245,240,232,0.7);
+    --input-h: 48px; /* consistent touch target height */
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { font-size: 16px; } /* prevent iOS zoom on inputs */
 
   body {
     background: var(--forest);
@@ -29,33 +32,72 @@
     font-family: 'Jost', sans-serif;
     min-height: 100vh;
     font-weight: 300;
+    -webkit-text-size-adjust: 100%;
   }
+
+  /* ── CALENDLY BAR ── */
+  .calendly-bar {
+    display: block;
+    background: linear-gradient(135deg, var(--gold-dim) 0%, var(--gold) 100%);
+    color: var(--forest);
+    text-align: center;
+    padding: 10px 16px;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.4px;
+    text-decoration: none;
+    transition: opacity 0.2s;
+    position: sticky;
+    top: 0;
+    z-index: 102;
+    line-height: 1.35;
+  }
+  .calendly-bar:hover { opacity: 0.9; }
+
+  /* ── AGENT CARD ── */
+  .agent-card {
+    background: linear-gradient(135deg, #0d1a10 0%, #1a2e1e 60%, #162813 100%);
+    border-bottom: 1px solid var(--gold-dim);
+    display: flex; align-items: center; justify-content: center;
+    gap: 14px; padding: 10px 16px;
+  }
+  .agent-card img {
+    width: 52px; height: 52px;
+    border-radius: 50%;
+    border: 2px solid var(--gold);
+    object-fit: cover;
+    flex-shrink: 0;
+  }
+  .agent-info { display: flex; flex-direction: column; gap: 2px; }
+  .agent-name { font-family: 'Cormorant Garamond', serif; font-size: 1.05rem; font-weight: 700; color: var(--gold-light); }
+  .agent-details { font-size: 0.72rem; color: var(--text-light); }
+  .agent-phone { font-size: 0.82rem; font-weight: 500; color: var(--cream); }
 
   /* ── HEADER ── */
   header {
     background: linear-gradient(135deg, #0f1a11 0%, var(--forest-mid) 60%, #1e3022 100%);
     border-bottom: 1px solid var(--gold-dim);
-    padding: 18px 32px;
+    padding: 12px 16px;
     display: flex;
     align-items: center;
-    gap: 18px;
+    gap: 14px;
     position: sticky;
-    top: 0;
+    top: 40px; /* offset below calendly bar */
     z-index: 100;
     box-shadow: 0 4px 20px rgba(0,0,0,0.5);
   }
 
   .logo-ring {
-    width: 54px; height: 54px;
+    width: 44px; height: 44px;
     border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
     flex-shrink: 0;
   }
 
-
   .header-text h1 {
     font-family: 'Cormorant Garamond', serif;
-    font-size: 1.5rem;
+    font-size: 1.25rem;
     font-weight: 700;
     color: var(--gold-light);
     letter-spacing: 3px;
@@ -63,8 +105,8 @@
   }
 
   .header-text p {
-    font-size: 0.68rem;
-    letter-spacing: 2px;
+    font-size: 0.62rem;
+    letter-spacing: 1.5px;
     color: var(--text-light);
     text-transform: uppercase;
   }
@@ -73,142 +115,60 @@
     margin-left: auto;
     background: var(--gold-dim);
     color: var(--cream);
-    font-size: 0.62rem;
+    font-size: 0.58rem;
     letter-spacing: 1.5px;
     text-transform: uppercase;
-    padding: 4px 10px;
+    padding: 4px 8px;
     border-radius: 2px;
+    white-space: nowrap;
   }
 
   /* ── LAYOUT ── */
   .container {
-    max-width: 1100px;
+    max-width: 800px;
     margin: 0 auto;
-    padding: 32px 24px 60px;
+    padding: 20px 14px 100px; /* bottom padding for sticky button */
   }
 
   .tagline {
     text-align: center;
-    margin-bottom: 36px;
+    margin-bottom: 20px;
+    padding: 0 4px;
   }
 
   .tagline h2 {
     font-family: 'Cormorant Garamond', serif;
-    font-size: 1.9rem;
+    font-size: 1.45rem;
     font-weight: 500;
     color: var(--gold-light);
-    margin-bottom: 6px;
+    margin-bottom: 5px;
+    line-height: 1.2;
   }
 
   .tagline p {
-    font-size: 0.82rem;
+    font-size: 0.76rem;
     color: var(--text-light);
-    letter-spacing: 1px;
+    letter-spacing: 0.8px;
   }
 
-  /* ── GRID ── */
+  /* ── GRID → single column on mobile ── */
   .grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-  }
-
-  /* ── MOBILE OVERHAUL ── */
-  @media (max-width: 720px) {
-    .grid { grid-template-columns: 1fr; gap: 14px; }
-
-    header { padding: 12px 16px; gap: 12px; }
-    .logo-ring { width: 42px; height: 42px; }
-    .logo-icon { font-size: 18px; }
-    .header-text h1 { font-size: 1.15rem; letter-spacing: 2px; }
-    .header-text p { font-size: 0.6rem; }
-    .header-badge { display: none; }
-
-    .container { padding: 16px 14px 80px; }
-
-    .tagline { margin-bottom: 20px; }
-    .tagline h2 { font-size: 1.3rem; }
-    .tagline p { font-size: 0.74rem; }
-
-    /* bigger touch targets on inputs */
-    input[type="number"], input[type="text"], select {
-      font-size: 1rem;
-      padding: 13px 12px;
-    }
-    .has-prefix input { padding-left: 26px; }
-    .has-suffix input { padding-right: 38px; }
-
-    label { font-size: 0.7rem; }
-
-    /* slider thumb bigger for fat fingers */
-    input[type="range"] { height: 6px; }
-    input[type="range"]::-webkit-slider-thumb { width: 24px; height: 24px; }
-
-    /* field rows stay 2-col only if they fit, else stack */
-    .field-row { grid-template-columns: 1fr 1fr; gap: 8px; }
-
-    .card { padding: 16px 14px; border-radius: 8px; }
-    .card-title { font-size: 0.95rem; padding-bottom: 8px; margin-bottom: 12px; }
-
-    /* collapsible advanced section on mobile */
-    .collapsible-toggle {
-      display: flex !important;
-    }
-
-    /* sticky bottom calc button */
-    .calc-btn-wrap {
-      position: fixed;
-      bottom: 0; left: 0; right: 0;
-      padding: 12px 16px;
-      background: linear-gradient(to top, var(--forest) 70%, transparent);
-      z-index: 99;
-    }
-    .calc-btn-wrap .calc-btn {
-      margin: 0;
-      padding: 16px;
-      font-size: 0.9rem;
-      border-radius: 8px;
-      box-shadow: 0 -4px 20px rgba(0,0,0,0.5);
-    }
-    /* hide the inline btn on mobile */
-    .calc-btn-inline { display: none; }
-
-    /* metrics grid: 2 cols on mobile */
-    .results-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
-    .metric { padding: 12px 10px; }
-    .metric-value { font-size: 1.25rem; }
-    .metric-label { font-size: 0.62rem; }
-
-    .results-card { padding: 16px 14px; }
-    .results-title { font-size: 1.05rem; margin-bottom: 16px; }
-
-    /* year table: show fewer cols, enable scroll */
-    .year-table-wrap { -webkit-overflow-scrolling: touch; }
-    table { font-size: 0.72rem; }
-    th, td { padding: 8px 8px; }
-
-    .verdict { font-size: 0.8rem; padding: 12px 14px; }
-    .verdict-icon { font-size: 1.1rem; }
-  }
-
-  /* very small phones */
-  @media (max-width: 380px) {
-    .field-row { grid-template-columns: 1fr; }
-    .results-grid { grid-template-columns: 1fr 1fr; }
-    .tagline h2 { font-size: 1.1rem; }
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
   }
 
   /* ── CARDS ── */
   .card {
     background: linear-gradient(160deg, var(--forest-mid) 0%, var(--forest-light) 100%);
-    border: 1px solid rgba(201,168,76,0.2);
-    border-radius: 6px;
-    padding: 22px 24px;
+    border: 1px solid rgba(201,168,76,0.22);
+    border-radius: 10px;
+    padding: 18px 16px;
   }
 
   .card-title {
     font-family: 'Cormorant Garamond', serif;
-    font-size: 1.05rem;
+    font-size: 1rem;
     font-weight: 600;
     color: var(--gold);
     letter-spacing: 1.5px;
@@ -221,14 +181,14 @@
     gap: 8px;
   }
 
-  .card-title .icon { font-size: 1rem; }
+  .card-title .icon { font-size: 0.95rem; }
 
   /* ── FORM FIELDS ── */
-  .field { margin-bottom: 14px; }
+  .field { margin-bottom: 12px; }
 
   label {
     display: block;
-    font-size: 0.72rem;
+    font-size: 0.68rem;
     letter-spacing: 1px;
     text-transform: uppercase;
     color: var(--text-light);
@@ -244,37 +204,43 @@
   .prefix, .suffix {
     position: absolute;
     color: var(--gold-dim);
-    font-size: 0.82rem;
+    font-size: 0.85rem;
     font-weight: 500;
     pointer-events: none;
+    z-index: 1;
   }
-  .prefix { left: 11px; }
-  .suffix { right: 11px; }
+  .prefix { left: 13px; }
+  .suffix { right: 13px; }
 
-  input[type="number"], input[type="text"], select {
+  input[type="number"],
+  input[type="text"],
+  select {
     width: 100%;
     background: rgba(0,0,0,0.3);
     border: 1px solid rgba(201,168,76,0.25);
-    border-radius: 4px;
+    border-radius: 6px;
     color: var(--cream);
     font-family: 'Jost', sans-serif;
-    font-size: 0.88rem;
+    font-size: 1rem; /* 16px prevents iOS zoom */
     font-weight: 400;
-    padding: 9px 12px;
+    padding: 0 13px;
+    height: var(--input-h);
     transition: border-color 0.2s, box-shadow 0.2s;
     outline: none;
     -moz-appearance: textfield;
+    -webkit-appearance: none;
+    appearance: none;
   }
 
   input[type="number"]::-webkit-outer-spin-button,
   input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; }
 
-  .has-prefix input { padding-left: 24px; }
+  .has-prefix input { padding-left: 26px; }
   .has-suffix input { padding-right: 36px; }
 
   input:focus, select:focus {
     border-color: var(--gold);
-    box-shadow: 0 0 0 2px rgba(201,168,76,0.12);
+    box-shadow: 0 0 0 2px rgba(201,168,76,0.15);
   }
 
   select { cursor: pointer; }
@@ -287,27 +253,28 @@
   }
 
   /* ── SLIDER ── */
-  .slider-field { margin-bottom: 14px; }
+  .slider-field { margin-bottom: 12px; }
 
   .slider-label-row {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 5px;
+    align-items: center;
+    margin-bottom: 8px;
   }
 
   input[type="range"] {
     -webkit-appearance: none;
     width: 100%;
-    height: 4px;
+    height: 5px;
     background: rgba(201,168,76,0.2);
-    border-radius: 2px;
+    border-radius: 3px;
     outline: none;
     cursor: pointer;
   }
 
   input[type="range"]::-webkit-slider-thumb {
     -webkit-appearance: none;
-    width: 16px; height: 16px;
+    width: 26px; height: 26px;
     border-radius: 50%;
     background: var(--gold);
     border: 2px solid var(--forest);
@@ -315,140 +282,195 @@
     transition: transform 0.15s;
   }
 
-  input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
+  input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.15); }
+  input[type="range"]::-moz-range-thumb {
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    background: var(--gold);
+    border: 2px solid var(--forest);
+    cursor: pointer;
+  }
 
-  /* ── COLLAPSIBLE (mobile advanced section) ── */
+  /* ── COLLAPSIBLE ADVANCED ── */
   .collapsible-toggle {
-    display: none;
+    display: flex;
     width: 100%;
     background: none;
     border: 1px solid rgba(201,168,76,0.2);
-    border-radius: 4px;
+    border-radius: 6px;
     color: var(--gold);
     font-family: 'Jost', sans-serif;
-    font-size: 0.75rem;
+    font-size: 0.74rem;
     letter-spacing: 1px;
     text-transform: uppercase;
-    padding: 9px 14px;
+    padding: 12px 14px;
     cursor: pointer;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 12px;
+    margin-bottom: 0;
+    min-height: 44px;
   }
-  .collapsible-toggle .arrow { transition: transform 0.25s; }
+  .collapsible-toggle .arrow { transition: transform 0.25s; display: inline-block; }
   .collapsible-toggle.open .arrow { transform: rotate(180deg); }
-  .collapsible-body { overflow: hidden; transition: max-height 0.3s ease; }
 
-  /* sticky btn wrap hidden on desktop */
-  .calc-btn-wrap { display: none; }
+  .collapsible-body {
+    overflow: hidden;
+    transition: max-height 0.35s ease;
+    max-height: 0;
+  }
+  .collapsible-body.always-open { max-height: none !important; }
 
-  /* ── CALCULATE BTN ── */
+  .adv-inner { padding-top: 14px; }
+
+  /* ── SECTION DIVIDER ── */
+  .section-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(201,168,76,0.2), transparent);
+    margin: 14px 0;
+  }
+
+  /* ── STICKY CALCULATE BUTTON ── */
+  .calc-btn-wrap {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    padding: 10px 14px 12px;
+    background: linear-gradient(to top, var(--forest) 75%, transparent);
+    z-index: 99;
+  }
+
   .calc-btn {
     width: 100%;
     background: linear-gradient(135deg, var(--gold-dim) 0%, var(--gold) 100%);
     color: var(--forest);
     border: none;
-    border-radius: 4px;
+    border-radius: 8px;
     font-family: 'Jost', sans-serif;
-    font-size: 0.82rem;
+    font-size: 0.88rem;
     font-weight: 600;
     letter-spacing: 2px;
     text-transform: uppercase;
-    padding: 13px;
+    padding: 16px;
     cursor: pointer;
     transition: opacity 0.2s, transform 0.15s;
-    margin-top: 6px;
+    box-shadow: 0 -2px 16px rgba(0,0,0,0.4);
+    min-height: 54px;
   }
 
   .calc-btn:hover { opacity: 0.9; transform: translateY(-1px); }
-  .calc-btn:active { transform: translateY(0); }
+  .calc-btn:active { transform: translateY(0); opacity: 0.85; }
 
   /* ── RESULTS CARD ── */
   .results-card {
-    grid-column: 1 / -1;
     background: linear-gradient(160deg, #0f1a11 0%, var(--forest-mid) 100%);
     border: 1px solid var(--gold-dim);
-    border-radius: 6px;
-    padding: 26px 28px;
+    border-radius: 10px;
+    padding: 18px 16px;
   }
 
   .results-title {
     font-family: 'Cormorant Garamond', serif;
-    font-size: 1.3rem;
+    font-size: 1.15rem;
     color: var(--gold-light);
     letter-spacing: 2px;
     text-transform: uppercase;
-    margin-bottom: 24px;
+    margin-bottom: 18px;
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
   }
 
+  /* ── METRICS GRID: 2×4 on mobile ── */
   .results-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-    gap: 14px;
-    margin-bottom: 24px;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 18px;
   }
 
   .metric {
     background: rgba(0,0,0,0.3);
     border: 1px solid rgba(201,168,76,0.15);
-    border-radius: 5px;
-    padding: 14px 16px;
+    border-radius: 7px;
+    padding: 12px 10px;
     text-align: center;
   }
 
   .metric-label {
-    font-size: 0.65rem;
-    letter-spacing: 1.2px;
+    font-size: 0.6rem;
+    letter-spacing: 1px;
     text-transform: uppercase;
     color: var(--text-light);
-    margin-bottom: 6px;
+    margin-bottom: 5px;
+    line-height: 1.3;
   }
 
   .metric-value {
     font-family: 'Cormorant Garamond', serif;
-    font-size: 1.55rem;
+    font-size: 1.3rem;
     font-weight: 600;
     color: var(--gold-light);
+    line-height: 1.1;
   }
 
   .metric-value.negative { color: #e07070; }
   .metric-value.positive { color: #6ecf8e; }
 
   .metric-sub {
-    font-size: 0.68rem;
+    font-size: 0.6rem;
     color: var(--text-light);
-    margin-top: 2px;
+    margin-top: 3px;
+    line-height: 1.3;
   }
 
   /* ── VERDICT BANNER ── */
   .verdict {
-    border-radius: 5px;
-    padding: 14px 18px;
-    margin-bottom: 22px;
-    font-size: 0.85rem;
+    border-radius: 7px;
+    padding: 13px 14px;
+    margin-bottom: 18px;
+    font-size: 0.82rem;
     display: flex;
     align-items: flex-start;
-    gap: 12px;
+    gap: 10px;
     line-height: 1.5;
   }
 
   .verdict.strong-buy { background: rgba(39,174,96,0.12); border: 1px solid rgba(39,174,96,0.35); }
-  .verdict.moderate { background: rgba(201,168,76,0.10); border: 1px solid rgba(201,168,76,0.3); }
-  .verdict.caution { background: rgba(192,57,43,0.10); border: 1px solid rgba(192,57,43,0.3); }
+  .verdict.moderate   { background: rgba(201,168,76,0.10); border: 1px solid rgba(201,168,76,0.3); }
+  .verdict.caution    { background: rgba(192,57,43,0.10); border: 1px solid rgba(192,57,43,0.3); }
 
-  .verdict-icon { font-size: 1.3rem; flex-shrink: 0; }
-  .verdict-text strong { display: block; margin-bottom: 3px; font-weight: 600; font-size: 0.9rem; }
+  .verdict-icon { font-size: 1.2rem; flex-shrink: 0; margin-top: 1px; }
+  .verdict-text strong { display: block; margin-bottom: 3px; font-weight: 600; font-size: 0.86rem; }
 
   /* ── YEAR TABLE ── */
-  .year-table-wrap { overflow-x: auto; margin-top: 10px; }
+  .year-table-label {
+    font-size: 0.66rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--text-light);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .year-table-label::after {
+    content: '← swipe';
+    font-size: 0.58rem;
+    opacity: 0.5;
+  }
+
+  .year-table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border-radius: 5px;
+    border: 1px solid rgba(201,168,76,0.1);
+  }
 
   table {
     width: 100%;
+    min-width: 560px;
     border-collapse: collapse;
-    font-size: 0.78rem;
+    font-size: 0.75rem;
     white-space: nowrap;
   }
 
@@ -456,23 +478,33 @@
     background: rgba(201,168,76,0.12);
     color: var(--gold);
     font-weight: 500;
-    letter-spacing: 1px;
+    letter-spacing: 0.8px;
     text-transform: uppercase;
-    padding: 9px 12px;
+    padding: 9px 10px;
     text-align: right;
     border-bottom: 1px solid rgba(201,168,76,0.2);
+    position: sticky;
+    top: 0;
   }
-  th:first-child { text-align: left; }
+  th:first-child { text-align: left; position: sticky; left: 0; background: rgba(30,48,32,0.98); z-index: 2; }
 
   td {
-    padding: 8px 12px;
+    padding: 8px 10px;
     text-align: right;
     border-bottom: 1px solid rgba(255,255,255,0.04);
     color: var(--cream-dim);
   }
-  td:first-child { text-align: left; color: var(--text-light); }
+  td:first-child {
+    text-align: left;
+    color: var(--text-light);
+    position: sticky;
+    left: 0;
+    background: rgba(15,26,17,0.98);
+    z-index: 1;
+  }
 
-  tr:hover td { background: rgba(201,168,76,0.04); }
+  tr:hover td { background: rgba(201,168,76,0.05); }
+  tr:hover td:first-child { background: rgba(30,48,32,0.98); }
 
   .pos { color: #6ecf8e; }
   .neg { color: #e07070; }
@@ -480,47 +512,42 @@
   /* ── DISCLAIMER ── */
   .disclaimer {
     text-align: center;
-    font-size: 0.65rem;
+    font-size: 0.62rem;
     color: rgba(245,240,232,0.3);
-    margin-top: 32px;
-    line-height: 1.6;
-    letter-spacing: 0.5px;
+    margin-top: 24px;
+    line-height: 1.65;
+    letter-spacing: 0.4px;
+    padding: 0 4px;
   }
 
   .disclaimer a { color: var(--gold-dim); text-decoration: none; }
 
-  /* ── DIVIDER ── */
-  .section-divider {
-    height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(201,168,76,0.2), transparent);
-    margin: 20px 0;
-  }
-
   /* ── TOOLTIP ── */
   .help {
     display: inline-block;
-    width: 14px; height: 14px;
+    width: 15px; height: 15px;
     border-radius: 50%;
     background: rgba(201,168,76,0.2);
     color: var(--gold);
     font-size: 9px;
     text-align: center;
-    line-height: 14px;
+    line-height: 15px;
     cursor: help;
     margin-left: 4px;
     position: relative;
   }
 
-  .help:hover::after {
+  .help:hover::after,
+  .help:focus::after {
     content: attr(data-tip);
     position: absolute;
     left: 20px; top: -4px;
     background: #0f1a11;
     border: 1px solid var(--gold-dim);
     color: var(--cream);
-    font-size: 0.72rem;
+    font-size: 0.7rem;
     padding: 6px 10px;
-    border-radius: 4px;
+    border-radius: 5px;
     white-space: nowrap;
     z-index: 200;
     font-family: 'Jost', sans-serif;
@@ -529,94 +556,98 @@
     text-transform: none;
     pointer-events: none;
     box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    max-width: 200px;
+    white-space: normal;
   }
 
-  /* ── CALENDLY BAR ── */
-  .calendly-bar {
-    display: block;
-    background: linear-gradient(135deg, var(--gold-dim) 0%, var(--gold) 100%);
-    color: var(--forest);
-    text-align: center;
-    padding: 10px 20px;
-    font-family: 'Jost', sans-serif;
-    font-size: 0.82rem;
-    font-weight: 500;
-    letter-spacing: 0.5px;
-    text-decoration: none;
-    transition: opacity 0.2s;
-    position: sticky;
-    top: 0;
-    z-index: 101;
-  }
-  .calendly-bar:hover { opacity: 0.9; }
-  @media (max-width: 720px) {
-    .calendly-bar { font-size: 0.74rem; padding: 9px 14px; }
+  /* ── DESKTOP ── */
+  @media (min-width: 700px) {
+    header { padding: 16px 28px; top: 38px; gap: 18px; }
+    .logo-ring { width: 52px; height: 52px; }
+    .header-text h1 { font-size: 1.5rem; }
+    .header-text p { font-size: 0.66rem; }
+    .agent-card { gap: 16px; padding: 12px 28px; }
+    .agent-card img { width: 68px; height: 68px; }
+    .agent-name { font-size: 1.15rem; }
+
+    .container { padding: 28px 20px 60px; }
+    .tagline h2 { font-size: 1.85rem; }
+    .tagline { margin-bottom: 30px; }
+
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+    .results-card { grid-column: 1 / -1; padding: 24px 26px; }
+
+    .results-grid { grid-template-columns: repeat(4, 1fr); }
+    .results-title { font-size: 1.25rem; }
+
+    .calc-btn-wrap { display: none; }
+
+    .collapsible-body { max-height: none !important; }
+    .collapsible-toggle { display: none; }
+    .adv-inner { padding-top: 0; }
+
+    .year-table-label::after { display: none; }
+    table { min-width: unset; }
+    th:first-child { position: static; }
+    td:first-child { position: static; }
+
+    /* show inline button on desktop */
+    .calc-btn-inline {
+      display: block !important;
+      margin-top: 10px;
+    }
   }
 
-/* ── AGENT CARD ── */
-.agent-card {
-  background: linear-gradient(135deg, #0d1a10 0%, #1a2e1e 60%, #162813 100%);
-  border-bottom: 1px solid var(--gold-dim);
-  display: flex; align-items: center; justify-content: center;
-  gap: 16px; padding: 12px 32px;
-}
-.agent-card img { width: 70px; height: 70px; border-radius: 50%; border: 2px solid var(--gold); object-fit: cover; flex-shrink: 0; }
-.agent-info { display: flex; flex-direction: column; gap: 2px; }
-.agent-name { font-family: 'Cormorant Garamond', serif; font-size: 1.15rem; font-weight: 700; color: var(--gold-light); }
-.agent-details { font-size: 0.78rem; color: var(--text-light); }
-.agent-phone { font-size: 0.85rem; font-weight: 500; color: var(--cream); }
-@media (max-width: 720px) {
-  .agent-card { padding: 10px 16px; gap: 12px; }
-  .agent-card img { width: 48px; height: 48px; }
-  .agent-name { font-size: 1rem; }
-}
+  .calc-btn-inline { display: none; }
+
+  /* ── Very small phones ── */
+  @media (max-width: 360px) {
+    .field-row { grid-template-columns: 1fr; }
+    .tagline h2 { font-size: 1.2rem; }
+    .metric-value { font-size: 1.15rem; }
+  }
 </style>
 </head>
 <body>
 
 <a href="https://calendly.com/key2teerealestate/30min" target="_blank" class="calendly-bar">
-  📅 &nbsp;Ready to talk numbers in real life? &nbsp;<strong>Book a free 30-min call with Brent</strong>&nbsp; →
+  📅 &nbsp;Ready to talk numbers?&nbsp; <strong>Book a free 30-min call with Brent →</strong>
 </a>
+
 <div class="agent-card">
-  <img src="data:image/jpeg;base64,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" alt="Brent Thomas" />
+  <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAQDAwMDAgQDAwMEBAQFBgoGBgUFBgwICQcKDgwPDg4MDQ0PERYTDxAVEQ0NExoTFRcYGRkZDxIbHRsYHRYYGRj/2wBDAQQEBAYFBgsGBgsYEA0QGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBj/wAARCADIAMgDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD4lUdK9k+GCgxQ142le0fCxcxQ9K5o7lTfuntOpxf8SAf7tfMnxH+XU1x/er6j1Jc6AOP4TXy58Tfl1FTj+M1s9jCmc1osC3F2A3PNe2+DPDlrcldyDoK8U8OsRdqeetfQXgKUqVO09BWbaRqen6T4KsGsc+UpOK86+JHhe1tdNmKxgda9p0e/jSxw4xxXmPxQvI5dOmCg9DTUkzHW58d6goi1SeNeitio4+TWlPpt1feIp0jikCl+W25xW3ZeF7FWElwLpkXghiFBPoMc/wCFJzSOmMJSOfjhldwscTuTjAUE9fpVv+ytRCBjZTDtgrgn8DXd2NnY/ZGjgVrVAAStsdxx7knJ+ozio5mit42ngaKJEOGYOzoP94jlT9az9o+iNVS7s4uLStQ/1n2OYIDtLbeAfetGCGWGUJLEyMGwQwxWs+oS26+ZK7hJOFkjIeJx/vjIP0NXFv7O/gENzcnzcbVfbkD0OOc/X+VS5sPZ22On8NDMaV3USfuxkdq830C/urK5itrq1SSMsAs0J4x6/wCfzr0+BTJYxXCgmN8gHGOQcEH0PVGV9DOUWhFXpUqilCY4PepVXFNsi4RqfNWuq0xf3S8VzUagzLxXVaav7sCnElnp3wxT/T3P/TQV9KaeMWi/SvnH4Xrm9f8A66D+VfR9iMWq8dq6YbGC+ILwfuz9K4jVR80ldzdjMZ+lcTqw5kIpsUjY8ED/AEKQ+y/1op3gsqLCRc88UUjWn8J+KsY6ZFe0/CsgRQ1i654OtrSMlUQY9K6H4bQCCRIx2Ncq3N5fCe26h/yAR/umvmT4jW3m6iBjnfX1FNCZ9GCgZ4ryzxD4HGpXoZog2DWk9tDGCSZ4x4f03F5H8nBPWvfvCGmyLCjRr2rE0/4fiCRG8oAA16LoulvZxqo4xXDWjN7HXTlHqbaNPDBtK9q4Hxwyx6bJPcj5OgA6sT0A969BlDbeteHfEPXJdQ1mdLeZUjsj5UbbuEJ4eT69QPTFc0IzT1eh0RhGTskcf9lnbzRp+nNtLFpp2cKgH90EkEn6U/7fD9mFpAiJImSLdh5Zb/dcZVvoa6Twf4J1TxdCkllbSR2BO2J5Bhp27sfRa9asf2ftPe0U3c/7w9RHwAfatHXUXY7oYNyWiPlrULTV4LldV0qV5URsvC4wyHurDpgjjjrUz6Xc327ULPzre+QeZHMjEeahH3Xx/EvTPcda+pZvgGlvIZ9Oug7YwySZBYfXvWDL8J7jTrwBYsorcqeq59far+soX1CR81xaPeTTNNBC1pebv3qxDbHN9VHAP061eGjyYaaKN4Jv44h90n2PY19FSfC9UcuYQuc5X2qK48C20UBE0WT13A9aTxNwWXyPBFuLrSiZyszoSGMefu5649s84969U8DeL49ZjFjCYLkcxvaynY54OCpHRs4559xVu+8GWMqNH5YAI615zr/gvUfD92da0iV0ZGBO3g1caiZzVsM0j2W4tTEyyxq/lPnbvXaykdVYeoNMC8VzXhHx9c65p6x6xBCtwpVJnPG8Y2iT9BnrniuraLYxGQR2I5BHrXRe55jVmJGv71frXUaaPkFc1GMzKa6jTFHljFVFiPU/hgv+mv8A9dB/KvouyP8Aoy/Svnf4YD/S3OP+Wg/lX0RZDFqo9q6YbGH2mLdH92fpXEas3+s/Gu2vP9WR7Vw+rDPm/jVMiRf8HrO7ZQ4RQM+9FWvBmEt2X+8BRU7mtNaH5Na54yS9B2ODn0rq/hjMZij+prxZYwMYr2P4VcLFXPombvY+hUlEWkqSO1cJrniyz065+fA5rtblf+KfH0r5q+KBlFydsjD5uxqnqQmenJ8QtPPG8D8amHxEtVGFmA/Gvl5p7pR/r5P++qia9vR0uZPzpcqGfUUvj83MLwWkpad1IRVPJOO1c9pHg268T+JrHQyCI3zPeN2Izk/4V5L8PE1DUvHtrD5s0iorSMAeMD1PYc19qfDfQEtNLu9XlQfaLlginbghRXHimorQ9PL4c8rM7Dw94esNH0yGxs7dY40QKoUdAO1dTBY5UFV49TVbT4w0W7HI7+1b9sQI1G3noM8V50Emz6KcrKyM37HtJJxn6VQvLGN7kBlBJroJ5FQc7fTpWLOwN6rbuTx7CrcUiISdzmNVtURgAAvc4rlNUjQRn65OOldprjAlmHX3+tcXqIkMTfIcA9+9ZdTo1aucdcITOQe3Ofanp4cfXEls1QMdhY+mAKScbZW3ZBzxxXbeAvLW5nmlwcptB9666CUmkzyMW+ROR87Wmj/YNcm06eP91NLuDnqpAICj869LiRn0KCcx+Wyu0ciE8r3A+natnxd4JFlqtrexHmSXzMAdOegp9jaK3gfUgPMDRy+aS+Du+Y8j06n9K7IprRni1rPVGFGP3o5rp9NH7sVzUYzKtdRpo+QVtE5z1b4XLm6b/rp/SvoS0wLdfpXz98Lx/pJP/TT+lfQdp/qF+ldMHoYfaGXQzG30ritVX/WYFdvcj92a4zVBxKBTexEjQ8KjES49BRTvDXyRL9BRSNKex+MCjIFev/CsHEYHrXkEBygr2D4V/ejHvXMzoex9ATr/AMSAZ9K+b/icg+0MT/er6UuP+Rex/s181/FBgJWz2amnck8tmSq5j9jVtyDThGSuccUnUSIckj0X4AW8E3xUltplLGSycIMdcEZ+lfaegQfZrBICoGOflOeT/n9K+JPgtObX406UyuVV1kR8dSuwnH6V9v6Jcm7naVAuFbArixesbns5TK8jqtPBVNvbNa8IYxYGMjnJNZVvJDArPM2FzjNRap4v0DQl3ahfohAyEAySK44I9qbNG+RzBuDDj3rm3lk+0qr5+VvzpsHjfSdV2m0mYRNzlhtP5VW1C+heKSSLlsYxnviidtzSmmXtStoTbrNIoIznLdq4vVwiQPk8H07Vp65r8Y03Ak5RRvI7HFeUeI/iDPDdMtvFHKq/KF60uXmeg5z9nH3jTuIEdnCNkk5PNdB4QLLPJEo5C5KmvKoPHN1KHN1pU8eP40hJT8xXoHw68QWGp6jKgnBmVSMAYB/A811UYtSR5OJnGUXY9E163t721tgzZbouO3PpWZqmipYeBtXm8pQ5hGcc4+YcfQGty52S2UdzGCxjOTt646GpNTC33hvXLIXPH2N398qAT+eOldyV2eJUVjxGJf3oHvXU6YP3YrmoeZVNdPpo/djmnHczPWPhcB554/5af0r6AtRiEfSvAfheMTkf9NP6V79bZ8pfpXVDYw+0xtz/AKs1yOpj5JPxrrrn7h+lcpqS5ElN7ESLnh9f3Sj2FFSaAMRr9KKC4bH4sW5yi17F8Kzh09M143an5BXsPwtPzp9a5ZHT0PoW4f8A4p8f7tfM/wAVCfNb/e/rX0rMc6B/wGvmv4prmRx/tf1pR3EeXRNmUKavpIFXaRmm2WntczLgV6J4d8FHUGUGPdnHUVNSm29DnqLW5J8B7dbn45ac0kLPEiSFjtJCkrgZPbrX2po1iLK5ngXoJ2bJPXJryDwTpj+AdDt0stFiu31S/ENyx+UiPbwAfXPOK9dsH82+uiUAZWCEDsQP8a4K81rHsfS5bhJUqcaj+0mzM1G4u9Q1iTSIpZLUIRiZDzg9x/jWJrfh7wZollLqniXX4bdhz5l9c5JPoAx/lXS+IotTgs5n0GyWXUZlCRb1KorH+Js/wjqcdcV51qPwX0u5ibU/FPie6u9WY75L6QhXUFSCiAjCJyeAKxptN2bsejOMuW6V2c5F438Kyan5eha4JYVYYzGQjH2OK9b8M2a6xpwnEgMci7lcHO6vFNO8C6JpV5baTo9lPPbQsuJEY5IHQBsCvojQ7WHStPtYrS0W1U4PlL2J6/jUzt0NKamlrueC/GDUbzws1wI32xOMccdP61wfgXV4DJLfSaKurTRqJZWuZdiRoTjPoByPmYj2zXrvx58NprWkzmIHzkbcq4+93Irg/h7JFYabKsWk2zLJxOuPv+59cjjBrWk0lqc+IjJz36FG5+LuiahLc2U3hiWyW3me3aa3ZZYiyHBII6j3Gc1c0CeyinXXdMvFMQYA4PPJq7qNpaPOTb6KIg53ECJQMn6Vmr4Untrqa80+Q2cc7fvreEfI2Pbj9K0UorY5KlOo1aWp7z4f1BbyzZ0O8SxZAbODx/U5rJ8S+Jk8O6He3hEY+1Q+RmXJVQ4wx4PYA1U8BJKmhKrFWVGwCGJP61z3xa8gXFtov2u2gS4bzfKlfaGjAJb8yR+VdHPaNzhVBSqKL2IA+kXdpZ6noV79qsbleGPVHHVT+hHsa6LTR+7FeT/Dm0utJk8QaDcMSlneoE9Dw2CPquDXrOmj92BWtGTlG7OfGUFRrOEdj1n4Yf67/tp/SvfLf/Ur9K8F+F4/f8/89DXvNuf3a+mK7YfCecviY245Q1zN+uVkFdNckbDXNXhB303sTIv6KuI1+goqbR0/dAj2ooLhsfiRatkAV7D8LziRDnvXjVqcEZ717J8LyNy565rmmjoWx9CSHPh/8K+b/iifmc/7VfSB50DHtXzv8T7fzGkUDvURdhNHF+HGjNwu4V9C/D+O2ZkJUV88aLaNHMp969q8GagtmU3t0461pe5MlZan0VDpaahb2qwtt8iZJwAPTg/oa3mlC+IpkUgZKhsHr2rifCHiCGfWYbYPuLI2BnrgZ/pXZ3CY1lSqABsuGHRgWyP8K8jG0+Wo2up9TlNVzwii/str9TpoEjZz8oGe4/xqne6XbM58+NJAW6MB/ICniVPLRS4XJAJz09anu7i2gtN7SgKOSfWsKcdLs7dilaadplsfOitovMx97b0pHz5iueuc4I6ViL4nhu9dXTbTkj7zkdBW9bI097Eh6t1z6AVVrvQ05HDVnCfECZJLuLcCRnPT2rxzRbf+z/FU1uSAMlghPavWfHrudYSHzEY7iVx1OPSvH/FXmWMn/CWwOS9qAZ4vVM4P4jOfzraMbxaOSs1Gon5Hp9okElqJY1VuMnPrWFqczXF7sKkY+7g1V0LxHBqGliSCQhNo980lxep/aqAtj5umOv1rKMXzWZvWs4XR2vhkG30+Vs7S/wAzKOh7ZrzX9ojS4xZ6J4mR9s8YNqwP8SE5BHuD/OvVdP8AKdYmi6MOVHY1xXxi0aLXtO0exu5WiigE0ny5yXCjZn2z/OuyS91o8OlL98mch4ImF5aX15uLMXtY5Djqywc/0r0zTcbB9K878EaXcaZ4RiN4mye8ma6ZcYwuAq49sA16Lpw+QV0UPhRxY93ryserfDM4n6/8tDXvNucxDjtXgfw3O2bP+2a92tpB9nB9q7obHl/aG30ojjPNclc3i7pOe9a2u3nlxHBrhWunllIyeTTkyd2dzpOpxqgUtiisLR9OnvJM7iFFFRctXR+OVsgPQV698MDiZM+tUtR8FQ2UBKqox7Vq/D+H7NfCP0auecrnVFWR7+p/4kP4V4Z4+t2muWxGxyfSvdrOMy6QFPTFclrGhWtzORIOp9Kxi9RtHkfhbw8b/Uo4fKIA5PFfQvhfwHYG1QPCM4Haua0XSbPTL5ZlA9DXqWka9pttEpZgCB04renJLcyqpsfZeFINM1KC8tlw8Lbhxiuv1Roi1hcQn5SpTA7cg4rnJvGGlqCfMX86oweKbK/1aG0iucbiSEyCM461z4yKnHmW6O/Ka/spOnLZ/mdVJe7JAcfTP6VyvjDW5bfS2KOcduf5VvHBb7wbkjB6eua5DxPYSahqENmZDFbYMk7qOdo7D0zXkp9D6yM7Ik8A6I/9lT61eO/2m6JMZ7xjHHB796ranrfj7Tbm7WS0tbi3QHybmEsjkejLzz9DXRWGo2MFisVqcW8YC/eGB+JqLVtc0J9MuLb+3rCF5AVwZBkccV0wSS1E5OS0Pn3xb4+8U3KxXRsZEaNmVQp7qcZzXBXus+JNaaeK+kCwTDaVVSCec4Jr6A1Gz8JWmiSQPqVrvYbhK0gOW75H45rynUW0aKRhFd28oznMbgmt4tLRHBiKc780mP8AB9y9lbi2EpU9MHtXRTXUh1APkNluhri9Hv4JteaC38piMZ+cfyrvZbKSPTLOecAPJ1x3wazmrMiNRyhY7zwxqKyXUak7SODz3p/juSO812y0q7tZGtJLaR3lXjYdwGCfcVh+FZlfWH25xkDOa1vFU/na6IxkrFEq89ick/zrePvOx5dSo6b5kZYZWmRUUrHGqxxrnO1VGAPyFdLpw/diuZh/1orqNOHyCumJ5sm27s9L+HrbZhk/xV7dbykWo+leH+Asidf96vaISfsYHtXTB2Ryz3Oc8SXJJKg+tc5YL5t0v+9Wt4hJ8zpVDQ033q/71J7iWiPRfDsCx2Z46mirelr5cIAFFWdEFoflJr3ie0lgOxxnHrTPAV19o1PeDxuryWEzSKN8rt9TXqHwzXF0vH8VcclY2Wx9IWbmPRNw64rzzxX4rj0xmZmUY9a9Bt/8AgAH6V4H8UI8iX8aygtQk9Cd/ifEv/LVfzqrL8VlCkC4x7A14jLHiqrrg5rpnIO56cPisMciYmob74v8A9na5a6gpZ/IlWQqO4B5H5Zrx8gZpjAHioUE9C4ycWmj9JtD1W21nQrXU7OVZYLiJZYpFP3lYZH6YpNZsUvtPeJmCib927KecVh/B3xBfSfCiWCd/Mk0++Nsmf4UIDKPpmvcI7kXQaI8KeDjsfSvlcTT9nNx6H1uGq+0gpdzn9Q+DXhK/wBOhuRbS2d7BN5i3EErJu9Awzhh9RXQ2elJo4QP4RsL0bkJuIo" alt="Brent Thomas" />
   <div class="agent-info">
     <span class="agent-name">Brent Thomas</span>
     <span class="agent-details">REALTOR&#174; &nbsp;|&nbsp; Key2Tee Real Estate &nbsp;|&nbsp; Douglas Elliman</span>
     <span class="agent-phone">&#128222; &nbsp;<a href="tel:7023191432" style="color:inherit;text-decoration:none;">(702) 319-1432</a></span>
   </div>
 </div>
+
 <header>
-  <div class="logo-ring"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="54" height="54">
-  <circle cx="100" cy="100" r="100" fill="#000000"/>
-  <circle cx="100" cy="100" r="94" fill="#1a2e1e"/>
-  <circle cx="100" cy="100" r="91" fill="none" stroke="#c9a84c" stroke-width="1.2"/>
-  <circle cx="100" cy="100" r="86" fill="none" stroke="#c9a84c" stroke-width="0.6"/>
-  <path d="M100 22 L148 42 L148 105 Q148 145 100 170 Q52 145 52 105 L52 42 Z" fill="#1a2e1e" stroke="#c9a84c" stroke-width="1.5"/>
-  <path d="M76 50 Q100 40 124 50" fill="none" stroke="#c9a84c" stroke-width="1.2"/>
-  <circle cx="76" cy="50" r="2.5" fill="#c9a84c"/>
-  <circle cx="100" cy="38" r="3" fill="#c9a84c"/>
-  <circle cx="124" cy="50" r="2.5" fill="#c9a84c"/>
-  <polyline points="68,95 100,68 132,95" fill="none" stroke="#c9a84c" stroke-width="2" stroke-linejoin="round"/>
-  <rect x="72" y="94" width="50" height="32" fill="none" stroke="#c9a84c" stroke-width="1.8"/>
-  <rect x="78" y="100" width="12" height="11" fill="none" stroke="#c9a84c" stroke-width="1.2"/>
-  <line x1="84" y1="100" x2="84" y2="111" stroke="#c9a84c" stroke-width="0.8"/>
-  <line x1="78" y1="105.5" x2="90" y2="105.5" stroke="#c9a84c" stroke-width="0.8"/>
-  <rect x="96" y="100" width="12" height="11" fill="none" stroke="#c9a84c" stroke-width="1.2"/>
-  <line x1="102" y1="100" x2="102" y2="111" stroke="#c9a84c" stroke-width="0.8"/>
-  <line x1="96" y1="105.5" x2="108" y2="105.5" stroke="#c9a84c" stroke-width="0.8"/>
-  <rect x="87" y="111" width="10" height="15" fill="none" stroke="#c9a84c" stroke-width="1.5"/>
-  <line x1="128" y1="80" x2="128" y2="126" stroke="#c9a84c" stroke-width="1.5"/>
-  <polygon points="128,80 142,86 128,92" fill="#c9a84c"/>
-  <ellipse cx="128" cy="127" rx="6" ry="2.5" fill="none" stroke="#c9a84c" stroke-width="1.2"/>
-  <line x1="64" y1="136" x2="136" y2="136" stroke="#c9a84c" stroke-width="1"/>
-  <text x="100" y="152" text-anchor="middle" fill="#c9a84c" font-family="serif" font-size="13" font-weight="bold" letter-spacing="3">KEY2TEE</text>
-  <text x="100" y="162" text-anchor="middle" fill="#c9a84c" font-family="sans-serif" font-size="5.5" letter-spacing="2">LAS VEGAS · REAL ESTATE</text>
-</svg></div>
+  <div class="logo-ring">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="44" height="44">
+      <circle cx="100" cy="100" r="100" fill="#000000"/>
+      <circle cx="100" cy="100" r="94" fill="#1a2e1e"/>
+      <circle cx="100" cy="100" r="91" fill="none" stroke="#c9a84c" stroke-width="1.2"/>
+      <circle cx="100" cy="100" r="86" fill="none" stroke="#c9a84c" stroke-width="0.6"/>
+      <path d="M100 22 L148 42 L148 105 Q148 145 100 170 Q52 145 52 105 L52 42 Z" fill="#1a2e1e" stroke="#c9a84c" stroke-width="1.5"/>
+      <polyline points="68,95 100,68 132,95" fill="none" stroke="#c9a84c" stroke-width="2" stroke-linejoin="round"/>
+      <rect x="72" y="94" width="50" height="32" fill="none" stroke="#c9a84c" stroke-width="1.8"/>
+      <rect x="78" y="100" width="12" height="11" fill="none" stroke="#c9a84c" stroke-width="1.2"/>
+      <rect x="96" y="100" width="12" height="11" fill="none" stroke="#c9a84c" stroke-width="1.2"/>
+      <rect x="87" y="111" width="10" height="15" fill="none" stroke="#c9a84c" stroke-width="1.5"/>
+      <line x1="128" y1="80" x2="128" y2="126" stroke="#c9a84c" stroke-width="1.5"/>
+      <polygon points="128,80 142,86 128,92" fill="#c9a84c"/>
+      <ellipse cx="128" cy="127" rx="6" ry="2.5" fill="none" stroke="#c9a84c" stroke-width="1.2"/>
+      <text x="100" y="152" text-anchor="middle" fill="#c9a84c" font-family="serif" font-size="13" font-weight="bold" letter-spacing="3">KEY2TEE</text>
+      <text x="100" y="162" text-anchor="middle" fill="#c9a84c" font-family="sans-serif" font-size="5.5" letter-spacing="2">LAS VEGAS · REAL ESTATE</text>
+    </svg>
+  </div>
   <div class="header-text">
     <h1>Key2Tee</h1>
     <p>Las Vegas · Investment Property Analyzer</p>
   </div>
-  <div class="header-badge">SFR ROI Calculator</div>
+  <div class="header-badge">SFR ROI</div>
 </header>
 
 <div class="container">
@@ -635,7 +666,7 @@
         <label>Purchase Price <span class="help" data-tip="Total asking or agreed price">?</span></label>
         <div class="input-wrap has-prefix">
           <span class="prefix">$</span>
-          <input type="number" id="price" value="300000" min="50000" step="5000">
+          <input type="number" id="price" value="300000" min="50000" step="5000" inputmode="numeric">
         </div>
       </div>
 
@@ -643,14 +674,14 @@
         <div class="field">
           <label>Down Payment %</label>
           <div class="input-wrap has-suffix">
-            <input type="number" id="downPct" value="25" min="3.5" max="100" step="0.5">
+            <input type="number" id="downPct" value="25" min="3.5" max="100" step="0.5" inputmode="decimal">
             <span class="suffix">%</span>
           </div>
         </div>
         <div class="field">
           <label>Interest Rate</label>
           <div class="input-wrap has-suffix">
-            <input type="number" id="rate" value="5.0" min="2" max="15" step="0.125">
+            <input type="number" id="rate" value="5.0" min="2" max="15" step="0.125" inputmode="decimal">
             <span class="suffix">%</span>
           </div>
         </div>
@@ -668,7 +699,7 @@
         <div class="field">
           <label>Annual Appreciation</label>
           <div class="input-wrap has-suffix">
-            <input type="number" id="appreciation" value="6" min="0" max="20" step="0.5">
+            <input type="number" id="appreciation" value="6" min="0" max="20" step="0.5" inputmode="decimal">
             <span class="suffix">%</span>
           </div>
         </div>
@@ -678,14 +709,14 @@
         <label>Monthly Rent <span class="help" data-tip="Gross rent before vacancy">?</span></label>
         <div class="input-wrap has-prefix">
           <span class="prefix">$</span>
-          <input type="number" id="rent" value="1500" min="300" step="50">
+          <input type="number" id="rent" value="1500" min="300" step="50" inputmode="numeric">
         </div>
       </div>
 
       <div class="slider-field">
         <div class="slider-label-row">
           <label>Vacancy Rate</label>
-          <span id="vacancyVal" style="font-size:0.78rem; color:var(--gold)">4%</span>
+          <span id="vacancyVal" style="font-size:0.8rem; color:var(--gold); font-weight:500;">4%</span>
         </div>
         <input type="range" id="vacancy" min="0" max="20" value="4" step="1">
       </div>
@@ -693,22 +724,21 @@
       <div class="field">
         <label>Property Tax Rate <span class="help" data-tip="Annual as % of property value">?</span></label>
         <div class="input-wrap has-suffix">
-          <input type="number" id="taxRate" value="1.0" min="0.2" max="3" step="0.1">
+          <input type="number" id="taxRate" value="1.0" min="0.2" max="3" step="0.1" inputmode="decimal">
           <span class="suffix">%</span>
         </div>
       </div>
-
     </div>
 
     <!-- EXPENSE INPUTS -->
     <div class="card">
-      <div class="card-title"><span class="icon">💸</span> Expenses & Assumptions</div>
+      <div class="card-title"><span class="icon">💸</span> Expenses &amp; Assumptions</div>
 
       <div class="field-row">
         <div class="field">
           <label>Management Fee <span class="help" data-tip="% of monthly rent">?</span></label>
           <div class="input-wrap has-suffix">
-            <input type="number" id="mgmt" value="8" min="0" max="20" step="0.5">
+            <input type="number" id="mgmt" value="8" min="0" max="20" step="0.5" inputmode="decimal">
             <span class="suffix">%</span>
           </div>
         </div>
@@ -716,7 +746,7 @@
           <label>Monthly Insurance</label>
           <div class="input-wrap has-prefix">
             <span class="prefix">$</span>
-            <input type="number" id="insurance" value="38" min="0" step="5">
+            <input type="number" id="insurance" value="38" min="0" step="5" inputmode="numeric">
           </div>
         </div>
       </div>
@@ -726,99 +756,98 @@
           <label>Monthly Maintenance</label>
           <div class="input-wrap has-prefix">
             <span class="prefix">$</span>
-            <input type="number" id="maintenance" value="50" min="0" step="10">
+            <input type="number" id="maintenance" value="50" min="0" step="10" inputmode="numeric">
           </div>
         </div>
         <div class="field">
           <label>Monthly HOA</label>
           <div class="input-wrap has-prefix">
             <span class="prefix">$</span>
-            <input type="number" id="hoa" value="0" min="0" step="25">
+            <input type="number" id="hoa" value="0" min="0" step="25" inputmode="numeric">
           </div>
         </div>
       </div>
 
       <div class="section-divider"></div>
+
       <button class="collapsible-toggle" id="advToggle" onclick="toggleAdv()">
         <span>⚙️ Advanced Settings</span>
         <span class="arrow">▾</span>
       </button>
+
       <div class="collapsible-body" id="advBody">
-      <div class="card-title" style="font-size:0.85rem; margin-top:4px"><span class="icon">🧾</span> Closing Costs</div>
+        <div class="adv-inner">
+          <div class="card-title" style="font-size:0.82rem; margin-bottom:12px;"><span class="icon">🧾</span> Closing Costs</div>
 
-      <div class="field-row">
-        <div class="field">
-          <label>Buyer Closing Costs %</label>
-          <div class="input-wrap has-suffix">
-            <input type="number" id="closingPct" value="2" min="0" max="6" step="0.25">
-            <span class="suffix">%</span>
+          <div class="field-row">
+            <div class="field">
+              <label>Buyer Closing Costs %</label>
+              <div class="input-wrap has-suffix">
+                <input type="number" id="closingPct" value="2" min="0" max="6" step="0.25" inputmode="decimal">
+                <span class="suffix">%</span>
+              </div>
+            </div>
+            <div class="field">
+              <label>Loan Origination %</label>
+              <div class="input-wrap has-suffix">
+                <input type="number" id="origination" value="1.5" min="0" max="4" step="0.25" inputmode="decimal">
+                <span class="suffix">%</span>
+              </div>
+            </div>
           </div>
-        </div>
-        <div class="field">
-          <label>Loan Origination %</label>
-          <div class="input-wrap has-suffix">
-            <input type="number" id="origination" value="1.5" min="0" max="4" step="0.25">
-            <span class="suffix">%</span>
-          </div>
-        </div>
-      </div>
 
-      <div class="section-divider"></div>
-      <div class="card-title" style="font-size:0.85rem; margin-top:4px"><span class="icon">📈</span> Advanced</div>
+          <div class="section-divider"></div>
+          <div class="card-title" style="font-size:0.82rem; margin-bottom:12px;"><span class="icon">📈</span> Advanced</div>
 
-      <div class="field-row">
-        <div class="field">
-          <label>Inflation Rate</label>
-          <div class="input-wrap has-suffix">
-            <input type="number" id="inflation" value="2.5" min="0" max="10" step="0.25">
-            <span class="suffix">%</span>
+          <div class="field-row">
+            <div class="field">
+              <label>Inflation Rate</label>
+              <div class="input-wrap has-suffix">
+                <input type="number" id="inflation" value="2.5" min="0" max="10" step="0.25" inputmode="decimal">
+                <span class="suffix">%</span>
+              </div>
+            </div>
+            <div class="field">
+              <label>Your Tax Bracket</label>
+              <div class="input-wrap has-suffix">
+                <input type="number" id="taxBracket" value="31" min="10" max="50" step="1" inputmode="numeric">
+                <span class="suffix">%</span>
+              </div>
+            </div>
           </div>
-        </div>
-        <div class="field">
-          <label>Your Tax Bracket</label>
-          <div class="input-wrap has-suffix">
-            <input type="number" id="taxBracket" value="31" min="10" max="50" step="1">
-            <span class="suffix">%</span>
-          </div>
-        </div>
-      </div>
 
-      <div class="field-row">
-        <div class="field">
-          <label>Repair Allowance %</label>
-          <div class="input-wrap has-suffix">
-            <input type="number" id="repairs" value="0.5" min="0" max="3" step="0.1">
-            <span class="suffix">%</span>
+          <div class="field-row">
+            <div class="field">
+              <label>Repair Allowance %</label>
+              <div class="input-wrap has-suffix">
+                <input type="number" id="repairs" value="0.5" min="0" max="3" step="0.1" inputmode="decimal">
+                <span class="suffix">%</span>
+              </div>
+            </div>
+            <div class="field">
+              <label>Depreciation Basis</label>
+              <div class="input-wrap has-prefix">
+                <span class="prefix">$</span>
+                <input type="number" id="depBasis" value="270000" step="5000" inputmode="numeric">
+              </div>
+            </div>
           </div>
         </div>
-        <div class="field">
-          <label>Depreciation Basis</label>
-          <div class="input-wrap has-prefix">
-            <span class="prefix">$</span>
-            <input type="number" id="depBasis" value="270000" step="5000">
-          </div>
-        </div>
-      </div>
       </div><!-- end collapsible-body -->
 
+      <!-- Desktop inline button -->
       <button class="calc-btn calc-btn-inline" onclick="calculate()">⛳ Analyze This Deal</button>
-    </div>
-
-    <!-- STICKY MOBILE BUTTON -->
-    <div class="calc-btn-wrap">
-      <button class="calc-btn" onclick="calculate()">⛳ Analyze This Deal</button>
     </div>
 
     <!-- RESULTS -->
     <div class="results-card" id="resultsCard">
       <div class="results-title">📊 Deal Analysis</div>
 
-      <div class="results-grid" id="metricsGrid">
-        <!-- populated by JS -->
-      </div>
+      <div class="results-grid" id="metricsGrid"></div>
 
       <div id="verdictBox"></div>
 
+      <div class="year-table-label">10-Year Projection</div>
       <div class="year-table-wrap">
         <table id="yearTable">
           <thead>
@@ -827,8 +856,8 @@
               <th>Prop Value</th>
               <th>Equity</th>
               <th>Gross Income</th>
-              <th>Total Expenses</th>
-              <th>Net Cash Flow</th>
+              <th>Total Exp.</th>
+              <th>Net CF</th>
               <th>After-Tax CF</th>
               <th>Cumulative CF</th>
             </tr>
@@ -836,7 +865,6 @@
           <tbody id="yearTableBody"></tbody>
         </table>
       </div>
-
     </div>
 
   </div><!-- end .grid -->
@@ -850,13 +878,18 @@
 
 </div><!-- end .container -->
 
+<!-- STICKY MOBILE BUTTON -->
+<div class="calc-btn-wrap">
+  <button class="calc-btn" onclick="calculate()">⛳ Analyze This Deal</button>
+</div>
+
 <script>
 // ── slider live display ──
 document.getElementById('vacancy').addEventListener('input', function() {
   document.getElementById('vacancyVal').textContent = this.value + '%';
 });
 
-// ── collapsible advanced section (mobile) ──
+// ── collapsible advanced section ──
 function toggleAdv() {
   const btn  = document.getElementById('advToggle');
   const body = document.getElementById('advBody');
@@ -864,14 +897,14 @@ function toggleAdv() {
   body.style.maxHeight = open ? body.scrollHeight + 'px' : '0';
 }
 
-// init: on mobile collapse by default, on desktop always open
 function initAdv() {
   const body = document.getElementById('advBody');
-  if (window.innerWidth <= 720) {
-    body.style.maxHeight = '0';
-  } else {
+  const btn  = document.getElementById('advToggle');
+  if (window.innerWidth >= 700) {
     body.style.maxHeight = 'none';
-    document.getElementById('advToggle').classList.add('open');
+    btn.classList.add('open');
+  } else {
+    body.style.maxHeight = body.style.maxHeight === 'none' ? body.scrollHeight + 'px' : body.style.maxHeight;
   }
 }
 initAdv();
@@ -883,7 +916,6 @@ function calculate() {
   const fmtD = v => (v >= 0 ? '+' : '') + fmt(v);
   const pct  = v => (v * 100).toFixed(2) + '%';
 
-  // inputs
   const price       = +document.getElementById('price').value;
   const downPct     = +document.getElementById('downPct').value / 100;
   const annRate     = +document.getElementById('rate').value / 100;
@@ -908,67 +940,56 @@ function calculate() {
   const monthRate   = annRate / 12;
   const numPayments = termYrs * 12;
 
-  // monthly P&I
   const piPayment = monthRate === 0
     ? loanAmt / numPayments
     : loanAmt * (monthRate * Math.pow(1 + monthRate, numPayments))
                 / (Math.pow(1 + monthRate, numPayments) - 1);
 
-  // cash at closing
   const closingCosts = price * closingPct + loanAmt * origPct;
   const totalCash    = downPayment + closingCosts;
+  const annualDep    = depBasis / 27.5;
 
-  // annual depreciation (residential = 27.5 years)
-  const annualDep = depBasis / 27.5;
-
-  let balance      = loanAmt;
-  let cumCF        = -totalCash;
-  let propValue    = price;
-  const rows       = [];
+  let balance = loanAmt;
+  let cumCF   = -totalCash;
+  let propValue = price;
+  const rows  = [];
 
   for (let yr = 1; yr <= 10; yr++) {
-    // grow rents and expenses with inflation after year 1
     const multiplier   = yr === 1 ? 1 : Math.pow(1 + inflation, yr - 1);
     const adjRent      = monthlyRent * multiplier;
     const adjInsurance = insurance * multiplier;
     const adjMaint     = maint * multiplier;
     const adjHoa       = hoa * multiplier;
 
-    // income
     const grossIncome = adjRent * 12;
     const netIncome   = grossIncome * (1 - vacancyPct);
 
-    // calculate year principal paid & interest paid
-    let yearInterest  = 0;
-    let yearPrincipal = 0;
+    let yearInterest = 0, yearPrincipal = 0;
     for (let m = 0; m < 12; m++) {
-      const intPmt = balance * monthRate;
-      const prinPmt= piPayment - intPmt;
+      const intPmt  = balance * monthRate;
+      const prinPmt = piPayment - intPmt;
       yearInterest  += intPmt;
       yearPrincipal += prinPmt;
       balance       -= prinPmt;
     }
 
-    // expenses
-    const propTax   = propValue * propTaxRate;
-    const mgmtFee   = netIncome * mgmtPct;
-    const repairs   = price * repairsPct * multiplier;
-    const annualPI  = piPayment * 12;
-    const totalExp  = annualPI + propTax + adjInsurance * 12 + adjMaint * 12
-                      + adjHoa * 12 + mgmtFee + repairs;
+    const propTax  = propValue * propTaxRate;
+    const mgmtFee  = netIncome * mgmtPct;
+    const repairs  = price * repairsPct * multiplier;
+    const annualPI = piPayment * 12;
+    const totalExp = annualPI + propTax + adjInsurance * 12 + adjMaint * 12
+                     + adjHoa * 12 + mgmtFee + repairs;
 
-    // NOI & cash flow
-    const noi       = netIncome - totalExp;
-    const cashFlow  = noi;
+    const noi      = netIncome - totalExp;
+    const cashFlow = noi;
 
-    // tax impact
-    const taxableIncome = noi - annualDep + yearPrincipal; // add back principal (non-deductible) subtract dep
+    const taxableIncome = noi - annualDep + yearPrincipal;
     const taxImpact     = taxableIncome < 0
-      ? Math.abs(taxableIncome) * taxBracket   // tax credit
-      : -taxableIncome * taxBracket;           // tax owed
+      ? Math.abs(taxableIncome) * taxBracket
+      : -taxableIncome * taxBracket;
 
-    const afterTaxCF    = cashFlow + taxImpact;
-    cumCF              += afterTaxCF;
+    const afterTaxCF = cashFlow + taxImpact;
+    cumCF += afterTaxCF;
 
     propValue = price * Math.pow(1 + appRate, yr);
     const equity = propValue - balance;
@@ -976,26 +997,22 @@ function calculate() {
     rows.push({ yr, propValue, equity, grossIncome, totalExp, cashFlow, afterTaxCF, cumCF });
   }
 
-  // ── top metrics ──
-  const yr1 = rows[0];
-  const yr5 = rows[4];
-  const yr10 = rows[9];
-
-  const cashOnCash     = yr1.afterTaxCF / totalCash;
-  const capRate        = (yr1.grossIncome * (1 - vacancyPct) - yr1.totalExp + piPayment * 12) / price;
-  const grossRentMult  = price / (monthlyRent * 12);
-  const yr5Equity      = yr5.equity;
-  const totalReturn5   = (yr5.cumCF + yr5.equity - downPayment) / totalCash;
+  const yr1 = rows[0], yr5 = rows[4];
+  const cashOnCash    = yr1.afterTaxCF / totalCash;
+  const capRate       = (yr1.grossIncome * (1 - vacancyPct) - yr1.totalExp + piPayment * 12) / price;
+  const grossRentMult = price / (monthlyRent * 12);
+  const yr5Equity     = yr5.equity;
+  const totalReturn5  = (yr5.cumCF + yr5.equity - downPayment) / totalCash;
 
   const metrics = [
-    { label: 'Total Cash In', value: fmt(totalCash), sub: 'Down + closing costs', cls: '' },
-    { label: 'Monthly P&I', value: fmt(piPayment), sub: 'Principal + interest', cls: '' },
-    { label: 'Cap Rate', value: pct(capRate), sub: 'Net operating yield', cls: capRate >= 0.06 ? 'positive' : capRate >= 0.04 ? '' : 'negative' },
-    { label: 'Cash-on-Cash', value: pct(cashOnCash), sub: 'After-tax year 1', cls: cashOnCash >= 0.05 ? 'positive' : cashOnCash >= 0 ? '' : 'negative' },
-    { label: 'GRM', value: grossRentMult.toFixed(1) + 'x', sub: 'Gross rent multiplier', cls: grossRentMult <= 15 ? 'positive' : grossRentMult <= 20 ? '' : 'negative' },
-    { label: 'Yr 1 Cash Flow', value: fmtD(yr1.afterTaxCF), sub: 'After-tax annual', cls: yr1.afterTaxCF >= 0 ? 'positive' : 'negative' },
-    { label: 'Equity (Yr 5)', value: fmt(yr5Equity), sub: 'Appreciation + paydown', cls: 'positive' },
-    { label: '5-Yr Total Return', value: pct(totalReturn5), sub: 'On cash invested', cls: totalReturn5 >= 0 ? 'positive' : 'negative' },
+    { label: 'Total Cash In',    value: fmt(totalCash),           sub: 'Down + closing costs',    cls: '' },
+    { label: 'Monthly P&I',      value: fmt(piPayment),           sub: 'Principal + interest',    cls: '' },
+    { label: 'Cap Rate',         value: pct(capRate),             sub: 'Net operating yield',     cls: capRate >= 0.06 ? 'positive' : capRate >= 0.04 ? '' : 'negative' },
+    { label: 'Cash-on-Cash',     value: pct(cashOnCash),          sub: 'After-tax year 1',        cls: cashOnCash >= 0.05 ? 'positive' : cashOnCash >= 0 ? '' : 'negative' },
+    { label: 'GRM',              value: grossRentMult.toFixed(1) + 'x', sub: 'Gross rent multiplier', cls: grossRentMult <= 15 ? 'positive' : grossRentMult <= 20 ? '' : 'negative' },
+    { label: 'Yr 1 Cash Flow',   value: fmtD(yr1.afterTaxCF),    sub: 'After-tax annual',        cls: yr1.afterTaxCF >= 0 ? 'positive' : 'negative' },
+    { label: 'Equity (Yr 5)',    value: fmt(yr5Equity),           sub: 'Appreciation + paydown',  cls: 'positive' },
+    { label: '5-Yr Total Return',value: pct(totalReturn5),        sub: 'On cash invested',        cls: totalReturn5 >= 0 ? 'positive' : 'negative' },
   ];
 
   document.getElementById('metricsGrid').innerHTML = metrics.map(m => `
@@ -1006,7 +1023,6 @@ function calculate() {
     </div>
   `).join('');
 
-  // ── verdict ──
   let verdictClass, verdictIcon, verdictTitle, verdictBody;
   if (cashOnCash >= 0.06 && capRate >= 0.06) {
     verdictClass = 'strong-buy';
@@ -1035,10 +1051,9 @@ function calculate() {
     </div>
   `;
 
-  // ── year table ──
   document.getElementById('yearTableBody').innerHTML = rows.map(r => `
     <tr>
-      <td>Year ${r.yr}</td>
+      <td>Yr ${r.yr}</td>
       <td>${fmt(r.propValue)}</td>
       <td class="pos">${fmt(r.equity)}</td>
       <td>${fmt(r.grossIncome)}</td>
@@ -1048,9 +1063,15 @@ function calculate() {
       <td class="${r.cumCF >= 0 ? 'pos' : 'neg'}">${fmtD(r.cumCF)}</td>
     </tr>
   `).join('');
+
+  // scroll results into view on mobile
+  if (window.innerWidth < 700) {
+    setTimeout(() => {
+      document.getElementById('resultsCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100);
+  }
 }
 
-// run on load with defaults
 calculate();
 </script>
 </body>
