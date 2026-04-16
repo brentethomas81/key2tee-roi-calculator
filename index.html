@@ -1028,18 +1028,18 @@ function calculate() {
   if (cashOnCash >= 0.06 && capRate >= 0.06) {
     verdictClass = 'strong-buy';
     verdictIcon  = '🟢';
-    verdictTitle = 'Strong Deal — this one looks like a keeper.';
-    verdictBody  = `Cap rate and cash-on-cash are both in the green zone. With appreciation stacked on top, this property has serious long-term upside. Worth a closer look.`;
+    verdictTitle = 'Strong Cash Flow Deal — income and growth working together.';
+    verdictBody  = 'Cap rate and cash-on-cash are both firing. This property puts money in your pocket from day one while building long-term equity through appreciation. The holy grail — cash flow AND capital growth. Worth a very close look.';
   } else if (cashOnCash >= 0 && capRate >= 0.04) {
     verdictClass = 'moderate';
     verdictIcon  = '🟡';
-    verdictTitle = 'Moderate Deal — not going to blow your socks off, but solid.';
-    verdictBody  = `Cash flow is slim but positive. The real play here is likely appreciation and equity build. Make sure the rent assumptions are realistic before pulling the trigger.`;
+    verdictTitle = 'Solid Growth Play — cash flow positive with strong upside.';
+    verdictBody  = 'Cash flow is positive, but the bigger story here is likely long-term capital growth and equity accumulation. This is a proven strategy — many of the world\'s best performing markets (Sydney, London, Miami) have historically delivered modest cash flow but exceptional wealth creation. Appreciation, principal paydown and tax benefits often dwarf the monthly numbers.';
   } else {
     verdictClass = 'moderate';
     verdictIcon  = '🟡';
-    verdictTitle = 'Numbers Need Work — but a small tweak can change everything.';
-    verdictBody  = `Cash flow is tight on these numbers. Try adjusting the purchase price, rent, or down payment — sometimes a small move makes a big difference. Give Brent a call to talk through the options.`;
+    verdictTitle = 'Capital Growth Strategy — not all great deals cash flow from day one.';
+    verdictBody  = 'This deal may show neutral or negative cash flow on paper — but that does not tell the whole story. Many sophisticated investors globally deliberately accept lower cash flow in exchange for strong capital appreciation, equity build, depreciation benefits and long-term wealth creation. Las Vegas has delivered some of the strongest appreciation in the US over the past decade. The question is not just what does it cash flow — it\'s what is this asset worth in 5, 10, 20 years? Adjust the inputs, run the scenarios, and call Brent to talk strategy.';
   }
 
   document.getElementById('verdictBox').innerHTML = `
