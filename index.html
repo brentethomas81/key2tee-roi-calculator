@@ -3,10 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Key2Tee | Property ROI Calculator</title>
+<title>Key2Tee | Las Vegas Real Estate Tools</title>
+<meta name="description" content="Las Vegas real estate tools from Brent Thomas — ROI calculator, buyer intake, and seller intake forms.">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
-  :root {
+:root {
     --forest: #1a2e1e;
     --forest-mid: #243529;
     --forest-light: #2d4233;
@@ -607,6 +609,380 @@
     .tagline h2 { font-size: 1.2rem; }
     .metric-value { font-size: 1.15rem; }
   }
+
+  /* ═══════════════════ INTAKE ADDITIONS ═══════════════════ */
+
+  /* ── TAB NAV ── */
+  .tab-nav {
+    background: linear-gradient(180deg, #0f1a11 0%, var(--forest) 100%);
+    border-bottom: 1px solid rgba(201,168,76,0.22);
+    display: flex;
+    position: sticky;
+    top: 109px;
+    z-index: 99;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .tab-nav::-webkit-scrollbar { display: none; }
+  .tab-btn {
+    flex: 1; min-width: 120px;
+    background: none; border: none;
+    border-bottom: 2px solid transparent;
+    color: var(--text-light);
+    font-family: 'Jost', sans-serif;
+    font-size: 0.72rem; font-weight: 500;
+    letter-spacing: 1.5px; text-transform: uppercase;
+    padding: 14px 12px;
+    cursor: pointer;
+    transition: color 0.2s, border-color 0.2s, background 0.2s;
+    white-space: nowrap;
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+  }
+  .tab-btn:hover { color: var(--gold-light); background: rgba(201,168,76,0.04); }
+  .tab-btn.active {
+    color: var(--gold);
+    border-bottom-color: var(--gold);
+    background: rgba(201,168,76,0.06);
+  }
+  .tab-icon { font-size: 0.95rem; }
+
+  /* ── TAB PANELS ── */
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; animation: fadeIn 0.25s ease; }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── SHARE BAR ── */
+  .share-bar {
+    background: rgba(201,168,76,0.06);
+    border: 1px solid rgba(201,168,76,0.2);
+    border-radius: 8px;
+    padding: 12px 14px;
+    margin-bottom: 20px;
+    display: flex; align-items: center; gap: 10px;
+    flex-wrap: wrap;
+    font-size: 0.78rem; color: var(--cream-dim);
+  }
+  .share-bar .share-label {
+    color: var(--gold); letter-spacing: 1px;
+    text-transform: uppercase; font-size: 0.66rem;
+    font-weight: 600;
+  }
+  .share-bar button {
+    background: transparent;
+    border: 1px solid var(--gold-dim);
+    color: var(--gold);
+    font-family: 'Jost', sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.8px;
+    padding: 6px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.2s;
+    margin-left: auto;
+  }
+  .share-bar button:hover { background: rgba(201,168,76,0.1); }
+
+  /* ── SECTION HEADER (Client / Agent) ── */
+  .section-header {
+    display: flex; align-items: center; gap: 12px;
+    margin: 4px 0 14px;
+    padding: 14px 16px;
+    background: linear-gradient(135deg, rgba(201,168,76,0.12) 0%, rgba(201,168,76,0.04) 100%);
+    border: 1px solid rgba(201,168,76,0.3);
+    border-left: 3px solid var(--gold);
+    border-radius: 8px;
+  }
+  .section-header .badge {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 34px; height: 34px;
+    background: var(--gold); color: var(--forest);
+    border-radius: 50%;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem; font-weight: 700;
+    flex-shrink: 0;
+  }
+  .section-header h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem; color: var(--gold-light);
+    letter-spacing: 1.5px; text-transform: uppercase;
+    line-height: 1.1;
+  }
+  .section-header small {
+    display: block;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.7rem;
+    color: var(--text-light);
+    letter-spacing: 0.4px;
+    text-transform: none;
+    margin-top: 2px;
+  }
+  .section-wrap { margin-bottom: 22px; }
+
+  .cards-grid { display: flex; flex-direction: column; gap: 14px; }
+
+  /* ── FORM FIELDS (extended types) ── */
+  input[type="email"],
+  input[type="tel"],
+  input[type="date"],
+  input[type="datetime-local"],
+  textarea {
+    width: 100%;
+    background: rgba(0,0,0,0.3);
+    border: 1px solid rgba(201,168,76,0.25);
+    border-radius: 6px;
+    color: var(--cream);
+    font-family: 'Jost', sans-serif;
+    font-size: 1rem; font-weight: 400;
+    padding: 0 13px;
+    height: var(--input-h);
+    transition: border-color 0.2s, box-shadow 0.2s;
+    outline: none;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  textarea {
+    padding: 12px 13px; height: auto;
+    min-height: 90px; resize: vertical; line-height: 1.5;
+  }
+  input[type="date"], input[type="datetime-local"] { color-scheme: dark; }
+  input[type="email"]:focus, input[type="tel"]:focus,
+  input[type="date"]:focus, input[type="datetime-local"]:focus,
+  textarea:focus {
+    border-color: var(--gold);
+    box-shadow: 0 0 0 2px rgba(201,168,76,0.15);
+  }
+  label .req { color: var(--gold); margin-left: 2px; }
+  .field-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+
+  /* ── RADIO / CHECKBOX ── */
+  .radio-group, .check-group { display: flex; flex-direction: column; gap: 8px; }
+  .radio-option, .check-option {
+    position: relative;
+    display: flex; align-items: center; gap: 10px;
+    padding: 11px 13px;
+    background: rgba(0,0,0,0.25);
+    border: 1px solid rgba(201,168,76,0.22);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+    font-size: 0.88rem; color: var(--cream-dim);
+  }
+  .radio-option input, .check-option input {
+    position: absolute; opacity: 0; pointer-events: none;
+  }
+  .radio-option .radio-dot {
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    border: 1.5px solid var(--gold-dim);
+    flex-shrink: 0; position: relative;
+    transition: border-color 0.2s;
+  }
+  .radio-option .radio-dot::after {
+    content: ''; position: absolute; inset: 3px;
+    background: var(--gold); border-radius: 50%;
+    transform: scale(0); transition: transform 0.15s ease;
+  }
+  .radio-option input:checked ~ .radio-dot { border-color: var(--gold); }
+  .radio-option input:checked ~ .radio-dot::after { transform: scale(1); }
+  .radio-option:has(input:checked),
+  .check-option:has(input:checked) {
+    border-color: var(--gold);
+    background: rgba(201,168,76,0.08);
+    color: var(--cream);
+  }
+  .check-option .check-box {
+    width: 16px; height: 16px;
+    border: 1.5px solid var(--gold-dim);
+    border-radius: 3px;
+    flex-shrink: 0; position: relative;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .check-option .check-box::after {
+    content: '✓';
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--forest);
+    font-size: 12px; font-weight: 700;
+    opacity: 0; transition: opacity 0.15s;
+  }
+  .check-option input:checked ~ .check-box {
+    background: var(--gold); border-color: var(--gold);
+  }
+  .check-option input:checked ~ .check-box::after { opacity: 1; }
+  .check-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+  select {
+    cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23c9a84c' d='M6 8L0 0h12z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 13px center;
+    padding-right: 32px;
+  }
+
+  /* ── HELP TEXT (paragraph) ── */
+  .help-text {
+    font-size: 0.7rem; color: var(--text-light);
+    margin-top: 5px; line-height: 1.45; font-style: italic;
+  }
+
+  /* ── GENERIC BTN ── */
+  .btn {
+    width: 100%;
+    border: none;
+    border-radius: 8px;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.85rem; font-weight: 600;
+    letter-spacing: 1.8px; text-transform: uppercase;
+    padding: 15px 12px;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.15s;
+    min-height: 52px;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+  }
+  .btn-secondary {
+    background: transparent;
+    color: var(--gold);
+    border: 1px solid var(--gold-dim);
+  }
+  .btn-secondary:hover { background: rgba(201,168,76,0.08); }
+  .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .action-bar {
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  @media (min-width: 700px) {
+    .action-bar { flex-direction: row; }
+    .action-bar .btn { flex: 1; }
+  }
+
+  /* ── HERO SUBMIT ── */
+  .submit-hero {
+    margin-top: 28px;
+    padding: 24px 18px;
+    background: linear-gradient(160deg, rgba(201,168,76,0.14) 0%, rgba(201,168,76,0.04) 100%);
+    border: 1px solid var(--gold);
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 0 0 3px rgba(201,168,76,0.08);
+  }
+  .submit-hero h4 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.2rem;
+    color: var(--gold-light);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .submit-hero p {
+    font-size: 0.78rem;
+    color: var(--cream-dim);
+    line-height: 1.5;
+    margin-bottom: 16px;
+  }
+  .submit-hero .btn-hero {
+    background: linear-gradient(135deg, #d4b04e 0%, var(--gold-light) 50%, #d4b04e 100%);
+    color: var(--forest);
+    border: none;
+    border-radius: 10px;
+    font-family: 'Jost', sans-serif;
+    font-size: 1.02rem;
+    font-weight: 600;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    padding: 20px 28px;
+    cursor: pointer;
+    width: 100%;
+    min-height: 68px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    box-shadow:
+      0 4px 20px rgba(201,168,76,0.35),
+      inset 0 1px 0 rgba(255,255,255,0.25);
+    transition: transform 0.15s, box-shadow 0.2s, filter 0.2s;
+    animation: heroGlow 2.4s ease-in-out infinite;
+  }
+  .submit-hero .btn-hero:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.08);
+    box-shadow:
+      0 8px 28px rgba(201,168,76,0.55),
+      inset 0 1px 0 rgba(255,255,255,0.3);
+  }
+  .submit-hero .btn-hero:active { transform: translateY(0); }
+  .submit-hero .btn-hero .big-icon { font-size: 1.3rem; }
+  .submit-hero .btn-hero:disabled {
+    opacity: 0.6; cursor: not-allowed;
+    animation: none;
+  }
+  .submit-hero .recipients {
+    margin-top: 14px;
+    font-size: 0.68rem;
+    color: var(--text-light);
+    letter-spacing: 0.6px;
+  }
+  .submit-hero .recipients strong {
+    display: block;
+    color: var(--gold);
+    font-size: 0.62rem;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    margin-bottom: 3px;
+    font-weight: 600;
+  }
+  @keyframes heroGlow {
+    0%, 100% { box-shadow: 0 4px 20px rgba(201,168,76,0.35), inset 0 1px 0 rgba(255,255,255,0.25); }
+    50%      { box-shadow: 0 4px 28px rgba(201,168,76,0.6), inset 0 1px 0 rgba(255,255,255,0.3); }
+  }
+  @media (min-width: 700px) {
+    .submit-hero { padding: 32px 24px; }
+    .submit-hero h4 { font-size: 1.45rem; }
+    .submit-hero .btn-hero { font-size: 1.1rem; padding: 22px 32px; }
+  }
+
+  /* ── TOAST ── */
+  .toast {
+    position: fixed;
+    top: 70px; left: 50%;
+    transform: translateX(-50%) translateY(-20px);
+    background: var(--forest-mid);
+    border: 1px solid var(--gold);
+    color: var(--cream);
+    padding: 14px 20px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 200;
+    transition: opacity 0.3s, transform 0.3s;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+    max-width: 90%;
+    text-align: center;
+  }
+  .toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+    pointer-events: auto;
+  }
+
+  /* ── Desktop overrides specific to intake pieces ── */
+  @media (min-width: 700px) {
+    .tab-nav { top: 117px; }
+    .tab-btn { padding: 16px 18px; font-size: 0.78rem; }
+    .section-header h3 { font-size: 1.3rem; }
+  }
+  @media (max-width: 400px) {
+    .field-row-3 { grid-template-columns: 1fr; }
+    .check-grid { grid-template-columns: 1fr; }
+  }
+
 </style>
 </head>
 <body>
@@ -646,13 +1022,29 @@
   </div>
   <div class="header-text">
     <h1>Key2Tee</h1>
-    <p>Las Vegas · Investment Property Analyzer</p>
+    <p>Las Vegas · Real Estate Tools</p>
   </div>
-  <div class="header-badge">SFR ROI</div>
+  <div class="header-badge" id="tabBadge">SFR ROI</div>
 </header>
 
+<nav class="tab-nav" role="tablist">
+  <button class="tab-btn active" data-tab="roi" role="tab" aria-selected="true">
+    <span class="tab-icon">📊</span> ROI Calculator
+  </button>
+  <button class="tab-btn" data-tab="buyer" role="tab" aria-selected="false">
+    <span class="tab-icon">🏡</span> Buyer Intake
+  </button>
+  <button class="tab-btn" data-tab="seller" role="tab" aria-selected="false">
+    <span class="tab-icon">🔑</span> Seller Intake
+  </button>
+</nav>
+
 <div class="container">
-  <div class="tagline">
+
+<div class="toast" id="toast"></div>
+
+  <section class="tab-panel active" data-panel="roi" role="tabpanel">
+<div class="tagline">
     <h2>Run the Numbers Before You Run the Deal</h2>
     <p>Single-family residential investment analysis · Powered by Key2Tee Real Estate</p>
   </div>
@@ -876,15 +1268,1336 @@
     Key2Tee · Brent Thomas · Douglas Elliman Real Estate · License S.0186600<br>
     <a href="tel:7023191432">702-319-1432</a> &nbsp;|&nbsp; Las Vegas, NV
   </div>
+  </section>
+
+  <!-- ═══════════════════ BUYER INTAKE TAB ═══════════════════ -->
+  <section class="tab-panel" data-panel="buyer" role="tabpanel">
+
+    <div class="tagline">
+      <h2>Buyer Transaction Intake</h2>
+      <p>KEY2TEE · NEW BUYER REQUEST</p>
+    </div>
+
+    <div class="share-bar">
+      <span class="share-label">📨 Sending to a client?</span>
+      <span>Copy the page URL and share — either section can be filled by anyone.</span>
+      <button type="button" onclick="copyLink()">Copy Link</button>
+    </div>
+
+    <form id="buyerForm" novalidate>
+
+      <!-- ══════════════ CLIENT SECTION (BUYER) ══════════════ -->
+      <div class="section-wrap">
+        <div class="section-header">
+          <div class="badge">1</div>
+          <div>
+            <h3>Client Section</h3>
+            <small>Buyer details · to be completed by the client</small>
+          </div>
+        </div>
+
+        <div class="cards-grid">
+
+          <div class="card">
+            <div class="card-title"><span class="icon">👤</span> Primary Buyer</div>
+            <div class="field">
+              <label>Full Name <span class="req">*</span></label>
+              <input type="text" name="b_primaryName" required>
+            </div>
+            <div class="field-row">
+              <div class="field">
+                <label>Email <span class="req">*</span></label>
+                <input type="email" name="b_primaryEmail" required>
+              </div>
+              <div class="field">
+                <label>Phone <span class="req">*</span></label>
+                <input type="tel" name="b_primaryPhone" required>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-title"><span class="icon">👥</span> Second Buyer (Optional)</div>
+            <div class="field">
+              <label>Full Name</label>
+              <input type="text" name="b_secondName">
+            </div>
+            <div class="field-row">
+              <div class="field">
+                <label>Email</label>
+                <input type="email" name="b_secondEmail">
+              </div>
+              <div class="field">
+                <label>Phone</label>
+                <input type="tel" name="b_secondPhone">
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-title"><span class="icon">📍</span> Buyer Location</div>
+            <div class="field">
+              <label>Where are you currently based? <span class="req">*</span></label>
+              <input type="text" name="b_location" required placeholder="e.g. Las Vegas, NV · Los Angeles, CA · Sydney, Australia">
+            </div>
+            <div class="field">
+              <label>Will you occupy the property? <span class="req">*</span></label>
+              <div class="radio-group">
+                <label class="radio-option">
+                  <input type="radio" name="b_occupy" value="Yes" required>
+                  <span class="radio-dot"></span>
+                  Yes
+                </label>
+                <label class="radio-option">
+                  <input type="radio" name="b_occupy" value="No">
+                  <span class="radio-dot"></span>
+                  No (investment / second home)
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-title"><span class="icon">💳</span> Pre-Approval &amp; Financing</div>
+            <div class="field">
+              <label>Pre-Approval Obtained? <span class="req">*</span></label>
+              <div class="radio-group">
+                <label class="radio-option">
+                  <input type="radio" name="b_preApproval" value="Yes" required>
+                  <span class="radio-dot"></span>
+                  Yes — I'll send the letter to Brent's team
+                </label>
+                <label class="radio-option">
+                  <input type="radio" name="b_preApproval" value="No">
+                  <span class="radio-dot"></span>
+                  No / Need Help
+                </label>
+              </div>
+            </div>
+            <div class="field">
+              <label>Type of Loan</label>
+              <select name="b_loanType">
+                <option value="">Select…</option>
+                <option value="Conventional">Conventional</option>
+                <option value="FHA">FHA</option>
+                <option value="VA">VA</option>
+                <option value="Jumbo">Jumbo</option>
+                <option value="Cash">Cash</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-title"><span class="icon">🗒️</span> Notes From the Client</div>
+            <div class="field">
+              <label>Anything Brent should know?</label>
+              <textarea name="b_clientNotes" placeholder="Timeline, preferences, must-haves, deal-breakers…"></textarea>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="submit-hero">
+          <h4>⛳ Client — Ready to Send?</h4>
+          <p>Submits your details to Brent. A branded PDF also downloads for your records.<br>The agent will fill in the rest separately — you don't need to.</p>
+          <button type="button" class="btn-hero" onclick="submitForm('buyer', 'client')">
+            <span class="big-icon">📨</span> Send Client Info
+          </button>
+          <div class="recipients">
+            <strong>Delivered to</strong>
+            brentethomas81@gmail.com &nbsp;·&nbsp; key2teerealestate@gmail.com
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════════ AGENT SECTION (BUYER) ══════════════ -->
+      <div class="section-wrap">
+        <div class="section-header">
+          <div class="badge">2</div>
+          <div>
+            <h3>Agent Section</h3>
+            <small>Transaction details · for agent use</small>
+          </div>
+        </div>
+
+        <div class="cards-grid">
+
+          <div class="card">
+            <div class="card-title"><span class="icon">📋</span> Submittal</div>
+            <div class="field-row">
+              <div class="field">
+                <label>Submittal Date</label>
+                <input type="date" name="b_submittalDate">
+              </div>
+              <div class="field">
+                <label>Listing / Buyer Agent</label>
+                <input type="text" name="b_agentName" value="Brent Thomas">
+              </div>
+            </div>
+            <div class="field">
+              <label>Agent Email</label>
+              <input type="email" name="b_agentEmail">
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-title"><span class="icon">🏠</span> Property &amp; Offer</div>
+            <div class="field">
+              <label>Full Property Address</label>
+              <input type="text" name="b_propertyAddress" placeholder="123 Fairway Dr, Henderson, NV 89052">
+            </div>
+            <div class="field-row">
+              <div class="field">
+                <label>Offer Price</label>
+                <div class="input-wrap has-prefix">
+                  <span class="prefix">$</span>
+                  <input type="number" name="b_offerPrice" min="0" step="1000" inputmode="numeric">
+                </div>
+              </div>
+              <div class="field">
+                <label>EMD</label>
+                <div class="input-wrap has-prefix">
+                  <span class="prefix">$</span>
+                  <input type="number" name="b_emd" min="0" step="500" inputmode="numeric">
+                </div>
+              </div>
+            </div>
+            <div class="field">
+              <label>Down Payment Amount</label>
+              <div class="input-wrap has-prefix">
+                <span class="prefix">$</span>
+                <input type="number" name="b_downPayment" min="0" step="1000" inputmode="numeric">
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-title"><span class="icon">📅</span> Contingencies &amp; Dates</div>
+            <div class="field-row-3">
+              <div class="field">
+                <label>Appraisal (days)</label>
+                <input type="number" name="b_appraisalDays" min="0" step="1" inputmode="numeric">
+              </div>
+              <div class="field">
+                <label>Loan (days)</label>
+                <input type="number" name="b_loanDays" min="0" step="1" inputmode="numeric">
+              </div>
+              <div class="field">
+                <label>Due Diligence (days)</label>
+                <input type="number" name="b_ddDays" min="0" step="1" inputmode="numeric">
+              </div>
+            </div>
+            <div class="field">
+              <label>Other Purchase Contingencies</label>
+              <textarea name="b_otherContingencies" placeholder="List any additional contingencies, or 'None'"></textarea>
+            </div>
+            <div class="field-row">
+              <div class="field">
+                <label>Closing Date</label>
+                <input type="date" name="b_closingDate">
+              </div>
+              <div class="field">
+                <label>Offer Expiration</label>
+                <input type="datetime-local" name="b_offerExpiration">
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-title"><span class="icon">💼</span> Escrow, Commission &amp; Fees</div>
+            <div class="field">
+              <label>Preferred Escrow Officer / Company</label>
+              <input type="text" name="b_escrow">
+            </div>
+            <div class="field-row">
+              <div class="field">
+                <label>Requested Commission from Seller</label>
+                <input type="text" name="b_commission" placeholder="e.g. 2.5%">
+              </div>
+              <div class="field">
+                <label>Seller-Paid Closing Costs</label>
+                <div class="input-wrap has-prefix">
+                  <span class="prefix">$</span>
+                  <input type="number" name="b_sellerCC" min="0" step="500" inputmode="numeric">
+                </div>
+              </div>
+            </div>
+            <div class="field">
+              <label>Transaction Fee for Buyer</label>
+              <input type="text" name="b_transactionFee" placeholder="e.g. $495 or Waived">
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-title"><span class="icon">🛡️</span> Home Warranty</div>
+            <div class="field">
+              <label>Home Warranty Option</label>
+              <div class="radio-group">
+                <label class="radio-option">
+                  <input type="radio" name="b_warranty" value="Seller to Pay">
+                  <span class="radio-dot"></span>
+                  Seller to Pay
+                </label>
+                <label class="radio-option">
+                  <input type="radio" name="b_warranty" value="Buyer to Pay">
+                  <span class="radio-dot"></span>
+                  Buyer to Pay
+                </label>
+                <label class="radio-option">
+                  <input type="radio" name="b_warranty" value="Waived">
+                  <span class="radio-dot"></span>
+                  Waived
+                </label>
+                <label class="radio-option">
+                  <input type="radio" name="b_warranty" value="Agent to Pay">
+                  <span class="radio-dot"></span>
+                  Agent to Pay on Behalf of Client
+                </label>
+              </div>
+            </div>
+            <div class="field">
+              <label>Warranty Company &amp; Amount</label>
+              <input type="text" name="b_warrantyCompany" placeholder="e.g. First American – $550">
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-title"><span class="icon">🔁</span> Referral &amp; Agent Notes</div>
+            <div class="field">
+              <label>Is this a Referral?</label>
+              <div class="radio-group">
+                <label class="radio-option">
+                  <input type="radio" name="b_referral" value="Yes">
+                  <span class="radio-dot"></span>
+                  Yes
+                </label>
+                <label class="radio-option">
+                  <input type="radio" name="b_referral" value="No">
+                  <span class="radio-dot"></span>
+                  No
+                </label>
+              </div>
+              <div class="help-text">If yes, please send a separate email with the referring agent's info.</div>
+            </div>
+            <div class="field">
+              <label>Additional Agent Notes / Special Requests</label>
+              <textarea name="b_agentNotes" placeholder="Anything internal to flag on this deal…"></textarea>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="submit-hero">
+        <h4>⛳ Agent — Ready to Send?</h4>
+        <p>Submits the agent-side transaction details. A branded PDF also downloads.</p>
+        <button type="button" class="btn-hero" onclick="submitForm('buyer', 'agent')">
+          <span class="big-icon">📨</span> Send Agent Details
+        </button>
+        <div class="recipients">
+          <strong>Delivered to</strong>
+          brentethomas81@gmail.com &nbsp;·&nbsp; key2teerealestate@gmail.com
+        </div>
+      </div>
+
+      <div class="action-bar" style="margin-top: 14px;">
+        <button type="button" class="btn btn-secondary" onclick="generatePDF('buyer', 'all')">📄 Download Full PDF</button>
+      </div>
+    </form>
+
+    <p class="disclaimer">
+      Key2Tee · Brent Thomas · Douglas Elliman Real Estate · License S.0186600<br>
+      <a href="tel:7023191432" style="color:var(--gold-dim);text-decoration:none;">702-319-1432</a> &nbsp;|&nbsp; Las Vegas, NV
+    </p>
+  </section>
+
+  <!-- ═══════════════════ SELLER INTAKE TAB ═══════════════════ -->
+  <section class="tab-panel" data-panel="seller" role="tabpanel">
+
+    <div class="tagline">
+      <h2>Seller / Listing Intake</h2>
+      <p>KEY2TEE · NEW LISTING REQUEST</p>
+    </div>
+
+    <div class="share-bar">
+      <span class="share-label">📨 Sending to a client?</span>
+      <span>Copy the page URL and share — either section can be filled by anyone.</span>
+      <button type="button" onclick="copyLink()">Copy Link</button>
+    </div>
+
+    <form id="sellerForm" novalidate>
+
+      <!-- ══════════════ CLIENT SECTION (SELLER) ══════════════ -->
+      <div class="section-wrap">
+        <div class="section-header">
+          <div class="badge">1</div>
+          <div>
+            <h3>Client Section</h3>
+            <small>Seller details &amp; property info · to be completed by the client</small>
+          </div>
+        </div>
+
+        <div class="cards-grid">
+
+          <div class="card">
+            <div class="card-title"><span class="icon">👤</span> Primary Seller</div>
+            <div class="field">
+              <label>Full Name <span class="req">*</span></label>
+              <input type="text" name="s_primaryName" required>
+            </div>
+            <div class="field-row">
+              <div class="field">
+                <label>Email <span class="req">*</span></label>
+                <input type="email" name="s_primaryEmail" required>
+              </div>
+              <div class="field">
+                <label>Phone <span class="req">*</span></label>
+                <input type="tel" name="s_primaryPhone" required>
+              </div>
+            </div>
+            <div class="field">
+              <label>Marital Status <span class="req">*</span></label>
+              <select name="s_maritalStatus" required>
+                <option value="">Select…</option>
+                <option value="Single">Single</option>
+                <option value="Married">Married (Spouse will need to sign Quitclaim if not on loan)</option>
+                <option value="Divorced">Divorced (will need divorce decree)</option>
+                <option value="Widowed">Widowed (will need original death certificate)</option>
+                <option value="Trust or LLC">Trust or LLC</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-title"><span class="icon">👥</span> Second Seller (Optional)</div>
+            <div class="field">
+              <label>Full Name</label>
+              <input type="text" name="s_secondName">
+            </div>
+            <div class="field-row">
+              <div class="field">
+                <label>Email</label>
+                <input type="email" name="s_secondEmail">
+              </div>
+              <div class="field">
+                <label>Phone</label>
+                <input type="tel" name="s_secondPhone">
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-title"><span class="icon">🏡</span> The Property</div>
+            <div class="field">
+              <label>Full Property Address <span class="req">*</span></label>
+              <input type="text" name="s_propertyAddress" required placeholder="123 Fairway Dr, Henderson, NV 89052">
+            </div>
+            <div class="field">
+              <label>Gate Code (if applicable)</label>
+              <input type="text" name="s_gateCode">
+            </div>
+            <div class="field">
+              <label>Property Occupancy Status <span class="req">*</span></label>
+              <div class="radio-group">
+                <label class="radio-option">
+                  <input type="radio" name="s_occupancy" value="Owner Occupied" required>
+                  <span class="radio-dot"></span>
+                  Owner Occupied
+                </label>
+                <label class="radio-option">
+                  <input type="radio" name="s_occupancy" value="Tenant Occupied">
+                  <span class="radio-dot"></span>
+                  Tenant Occupied
+                </label>
+                <label class="radio-option">
+                  <input type="radio" name="s_occupancy" value="Vacant">
+                  <span class="radio-dot"></span>
+                  Vacant
+                </label>
+              </div>
+            </div>
+            <div class="field">
+              <label>Property Management Company (if tenant occupied)</label>
+              <input type="text" name="s_propMgmt">
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-title"><span class="icon">🍽️</span> Appliances Included in Sale</div>
+            <div class="check-grid">
+              <label class="check-option"><input type="checkbox" name="s_appliances" value="Fridge"><span class="check-box"></span>Fridge</label>
+              <label class="check-option"><input type="checkbox" name="s_appliances" value="Dishwasher"><span class="check-box"></span>Dishwasher</label>
+              <label class="check-option"><input type="checkbox" name="s_appliances" value="Stove"><span class="check-box"></span>Stove</label>
+              <label class="check-option"><input type="checkbox" name="s_appliances" value="Microwave"><span class="check-box"></span>Microwave</label>
+              <label class="check-option"><input type="checkbox" name="s_appliances" value="Washer"><span class="check-box"></span>Washer</label>
+              <label class="check-option"><input type="checkbox" name="s_appliances" value="Dryer"><span class="check-box"></span>Dryer</label>
+            </div>
+            <div class="help-text">Tick any that stay with the property. Unsure? Leave unchecked and note it below.</div>
+            <div class="section-divider"></div>
+            <div class="field">
+              <label>Personal Property Excluded from Sale</label>
+              <textarea name="s_excluded" placeholder="Items you're taking with you (fixtures, chandeliers, etc.)"></textarea>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-title"><span class="icon">⚡</span> Utilities &amp; Solar</div>
+            <div class="field">
+              <label>Are ALL utilities active (including gas)? <span class="req">*</span></label>
+              <div class="radio-group">
+                <label class="radio-option">
+                  <input type="radio" name="s_utilities" value="Yes" required>
+                  <span class="radio-dot"></span>
+                  Yes
+                </label>
+                <label class="radio-option">
+                  <input type="radio" name="s_utilities" value="No">
+                  <span class="radio-dot"></span>
+                  No
+                </label>
+              </div>
+            </div>
+            <div class="field">
+              <label>Does the property have Solar? <span class="req">*</span></label>
+              <div class="radio-group">
+                <label class="radio-option">
+                  <input type="radio" name="s_solar" value="Yes" required>
+                  <span class="radio-dot"></span>
+                  Yes (leased or owned)
+                </label>
+                <label class="radio-option">
+                  <input type="radio" name="s_solar" value="No">
+                  <span class="radio-dot"></span>
+                  No
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-title"><span class="icon">🔧</span> Repairs &amp; Prep</div>
+            <div class="field">
+              <label>Any repairs needed prior to marketing?</label>
+              <textarea name="s_repairs" placeholder="e.g. paint touch-ups, HVAC service, landscaping…"></textarea>
+            </div>
+            <div class="field">
+              <label>Professional Photos?</label>
+              <div class="radio-group">
+                <label class="radio-option">
+                  <input type="radio" name="s_photos" value="Yes – Order pro photos">
+                  <span class="radio-dot"></span>
+                  Yes — order professional photos
+                </label>
+                <label class="radio-option">
+                  <input type="radio" name="s_photos" value="Agent will provide">
+                  <span class="radio-dot"></span>
+                  Agent will provide photos
+                </label>
+              </div>
+            </div>
+            <div class="field">
+              <label>Preferred Day/Time for Photoshoot</label>
+              <input type="text" name="s_photoTime" placeholder="e.g. Weekday mornings work best">
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-title"><span class="icon">🗒️</span> Notes From the Client</div>
+            <div class="field">
+              <label>Anything Brent should know?</label>
+              <textarea name="s_clientNotes" placeholder="Urgency, special circumstances, HOA quirks, etc."></textarea>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="submit-hero">
+          <h4>⛳ Client — Ready to Send?</h4>
+          <p>Submits your details to Brent. A branded PDF also downloads for your records.<br>The agent will fill in the rest separately — you don't need to.</p>
+          <button type="button" class="btn-hero" onclick="submitForm('seller', 'client')">
+            <span class="big-icon">📨</span> Send Client Info
+          </button>
+          <div class="recipients">
+            <strong>Delivered to</strong>
+            brentethomas81@gmail.com &nbsp;·&nbsp; key2teerealestate@gmail.com
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════════ AGENT SECTION (SELLER) ══════════════ -->
+      <div class="section-wrap">
+        <div class="section-header">
+          <div class="badge">2</div>
+          <div>
+            <h3>Agent Section</h3>
+            <small>Listing setup · for agent use</small>
+          </div>
+        </div>
+
+        <div class="cards-grid">
+
+          <div class="card">
+            <div class="card-title"><span class="icon">📋</span> Submittal</div>
+            <div class="field-row">
+              <div class="field">
+                <label>Submittal Date</label>
+                <input type="date" name="s_submittalDate">
+              </div>
+              <div class="field">
+                <label>Listing Agent</label>
+                <input type="text" name="s_agentName" value="Brent Thomas">
+              </div>
+            </div>
+            <div class="field">
+              <label>Agent Email</label>
+              <input type="email" name="s_agentEmail">
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-title"><span class="icon">📅</span> Listing Terms</div>
+            <div class="field-row">
+              <div class="field">
+                <label>Listing Start Date</label>
+                <input type="date" name="s_listingStart">
+              </div>
+              <div class="field">
+                <label>Listing Duration</label>
+                <select name="s_listingDuration">
+                  <option value="">Select…</option>
+                  <option value="3 Months">3 Months</option>
+                  <option value="6 Months">6 Months</option>
+                  <option value="12 Months">12 Months</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+            </div>
+            <div class="field-row">
+              <div class="field">
+                <label>Listing Price</label>
+                <div class="input-wrap has-prefix">
+                  <span class="prefix">$</span>
+                  <input type="number" name="s_listingPrice" min="0" step="1000" inputmode="numeric">
+                </div>
+              </div>
+              <div class="field">
+                <label>Requested EMD</label>
+                <div class="input-wrap has-prefix">
+                  <span class="prefix">$</span>
+                  <input type="number" name="s_emd" min="0" step="500" inputmode="numeric">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-title"><span class="icon">💳</span> Loans Accepted</div>
+            <div class="check-grid">
+              <label class="check-option"><input type="checkbox" name="s_loans" value="Cash"><span class="check-box"></span>Cash</label>
+              <label class="check-option"><input type="checkbox" name="s_loans" value="Conventional"><span class="check-box"></span>Conventional</label>
+              <label class="check-option"><input type="checkbox" name="s_loans" value="FHA"><span class="check-box"></span>FHA</label>
+              <label class="check-option"><input type="checkbox" name="s_loans" value="VA"><span class="check-box"></span>VA</label>
+            </div>
+            <div class="field" style="margin-top:10px;">
+              <label>Other</label>
+              <input type="text" name="s_loansOther" placeholder="Any other loan types accepted">
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-title"><span class="icon">💼</span> Commission &amp; Fees</div>
+            <div class="field">
+              <label>Commission % Total (Listing Side)</label>
+              <input type="text" name="s_commission" placeholder="e.g. 2.5%">
+            </div>
+            <div class="field">
+              <label>Transaction Fee</label>
+              <input type="text" name="s_transactionFee" placeholder="e.g. $495 or Waived">
+            </div>
+            <div class="field">
+              <label>Is this a Referral?</label>
+              <div class="radio-group">
+                <label class="radio-option">
+                  <input type="radio" name="s_referral" value="Yes">
+                  <span class="radio-dot"></span>
+                  Yes
+                </label>
+                <label class="radio-option">
+                  <input type="radio" name="s_referral" value="No">
+                  <span class="radio-dot"></span>
+                  No
+                </label>
+              </div>
+              <div class="help-text">If yes, please send a separate email with the referring agent's info.</div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-title"><span class="icon">🔐</span> Lockbox &amp; Access</div>
+            <div class="field">
+              <label>Installing an E-Box at the Property?</label>
+              <div class="radio-group">
+                <label class="radio-option">
+                  <input type="radio" name="s_eBox" value="Yes - E-Box">
+                  <span class="radio-dot"></span>
+                  Yes — E-Box
+                </label>
+                <label class="radio-option">
+                  <input type="radio" name="s_eBox" value="No">
+                  <span class="radio-dot"></span>
+                  No
+                </label>
+                <label class="radio-option">
+                  <input type="radio" name="s_eBox" value="Combo Box Instead">
+                  <span class="radio-dot"></span>
+                  Installing a Combo Box Instead
+                </label>
+              </div>
+            </div>
+            <div class="field-row">
+              <div class="field">
+                <label>Lockbox Location</label>
+                <input type="text" name="s_lockboxLocation" placeholder="e.g. Front door">
+              </div>
+              <div class="field">
+                <label>Serial # or Combo Code</label>
+                <input type="text" name="s_lockboxSerial">
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-title"><span class="icon">🪧</span> Signage &amp; Marketing</div>
+            <div class="field-row">
+              <div class="field">
+                <label>Install For Sale Sign?</label>
+                <div class="radio-group">
+                  <label class="radio-option">
+                    <input type="radio" name="s_forSaleSign" value="Yes">
+                    <span class="radio-dot"></span> Yes
+                  </label>
+                  <label class="radio-option">
+                    <input type="radio" name="s_forSaleSign" value="No">
+                    <span class="radio-dot"></span> No
+                  </label>
+                </div>
+              </div>
+              <div class="field">
+                <label>HOA Specialty Sign Needed?</label>
+                <div class="radio-group">
+                  <label class="radio-option">
+                    <input type="radio" name="s_hoaSign" value="Yes">
+                    <span class="radio-dot"></span> Yes
+                  </label>
+                  <label class="radio-option">
+                    <input type="radio" name="s_hoaSign" value="No">
+                    <span class="radio-dot"></span> No
+                  </label>
+                </div>
+              </div>
+            </div>
+            <div class="field">
+              <label>Sign Rider?</label>
+              <input type="text" name="s_signRider" placeholder="e.g. Golf Course Views, Open House Sat 1-3">
+            </div>
+            <div class="field">
+              <label>Install Brochure Box?</label>
+              <div class="radio-group">
+                <label class="radio-option">
+                  <input type="radio" name="s_brochureBox" value="Yes">
+                  <span class="radio-dot"></span> Yes
+                </label>
+                <label class="radio-option">
+                  <input type="radio" name="s_brochureBox" value="No">
+                  <span class="radio-dot"></span> No
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-title"><span class="icon">🌐</span> Legal &amp; Tax</div>
+            <div class="field">
+              <label>Seller's FIRPTA Declaration</label>
+              <div class="radio-group">
+                <label class="radio-option">
+                  <input type="radio" name="s_firpta" value="Not Applicable">
+                  <span class="radio-dot"></span>
+                  Not Applicable
+                </label>
+                <label class="radio-option">
+                  <input type="radio" name="s_firpta" value="Subject to FIRPTA Withholdings">
+                  <span class="radio-dot"></span>
+                  IS subject to FIRPTA Withholdings
+                </label>
+                <label class="radio-option">
+                  <input type="radio" name="s_firpta" value="Other">
+                  <span class="radio-dot"></span>
+                  Other (note below)
+                </label>
+              </div>
+            </div>
+            <div class="field">
+              <label>Is Seller Participating in a 1031 Exchange?</label>
+              <div class="radio-group">
+                <label class="radio-option">
+                  <input type="radio" name="s_1031" value="Yes">
+                  <span class="radio-dot"></span> Yes
+                </label>
+                <label class="radio-option">
+                  <input type="radio" name="s_1031" value="No">
+                  <span class="radio-dot"></span> No
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-title"><span class="icon">🗒️</span> Additional Agent Notes</div>
+            <div class="field">
+              <label>Notes / Special Requests</label>
+              <textarea name="s_agentNotes" placeholder="Anything internal to flag on this listing…"></textarea>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="submit-hero">
+        <h4>⛳ Agent — Ready to Send?</h4>
+        <p>Submits the agent-side listing details. A branded PDF also downloads.</p>
+        <button type="button" class="btn-hero" onclick="submitForm('seller', 'agent')">
+          <span class="big-icon">📨</span> Send Agent Details
+        </button>
+        <div class="recipients">
+          <strong>Delivered to</strong>
+          brentethomas81@gmail.com &nbsp;·&nbsp; key2teerealestate@gmail.com
+        </div>
+      </div>
+
+      <div class="action-bar" style="margin-top: 14px;">
+        <button type="button" class="btn btn-secondary" onclick="generatePDF('seller', 'all')">📄 Download Full PDF</button>
+      </div>
+    </form>
+
+    <p class="disclaimer">
+      Key2Tee · Brent Thomas · Douglas Elliman Real Estate · License S.0186600<br>
+      <a href="tel:7023191432" style="color:var(--gold-dim);text-decoration:none;">702-319-1432</a> &nbsp;|&nbsp; Las Vegas, NV
+    </p>
+  </section>
 
 </div><!-- end .container -->
 
-<!-- STICKY MOBILE BUTTON -->
-<div class="calc-btn-wrap">
+<div id="roiStickyBtn"><div class="calc-btn-wrap">
   <button class="calc-btn" onclick="calculate()">⛳ Analyze This Deal</button>
-</div>
+</div></div>
 
 <script>
+
+  // ═══════════════════════ UNIFIED TAB + INTAKE LOGIC ═══════════════════════
+
+  // ── CONFIG ──
+  const WEB3FORMS_KEY = '06627225-147d-4367-9217-508cb5e92fa1';
+  const OFFICE_EMAIL_CC = 'key2teerealestate@gmail.com';
+
+  // ── TAB SWITCHING + HASH ROUTING ──
+  const tabBtns = document.querySelectorAll('.tab-btn');
+  const tabPanels = document.querySelectorAll('.tab-panel');
+  const tabBadge = document.getElementById('tabBadge');
+  const badgeLabels = { roi: 'SFR ROI', buyer: 'BUYER FORM', seller: 'SELLER FORM' };
+
+  function switchTab(target, updateHash = true) {
+    tabBtns.forEach(b => {
+      const active = b.dataset.tab === target;
+      b.classList.toggle('active', active);
+      b.setAttribute('aria-selected', active ? 'true' : 'false');
+    });
+    tabPanels.forEach(p => p.classList.toggle('active', p.dataset.panel === target));
+    if (tabBadge && badgeLabels[target]) tabBadge.textContent = badgeLabels[target];
+    if (updateHash && target) {
+      history.replaceState(null, '', '#' + target);
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  tabBtns.forEach(btn => btn.addEventListener('click', () => switchTab(btn.dataset.tab)));
+
+  // On load: honour hash fragment, and pre-fill from ?data= param if present (smart-resume link)
+  window.addEventListener('DOMContentLoaded', () => {
+    const hash = (location.hash || '').replace('#', '');
+    if (['roi', 'buyer', 'seller'].includes(hash)) switchTab(hash, false);
+    hydrateFromURL();
+  });
+
+  // ── PREFILL DATES ──
+  document.querySelectorAll('input[name$="submittalDate"]').forEach(i => {
+    if (!i.value) i.value = new Date().toISOString().split('T')[0];
+  });
+  const today = new Date().toISOString().split('T')[0];
+
+  // ── TOAST ──
+  const toastEl = document.getElementById('toast');
+  function toast(msg, ms = 2600) {
+    if (!toastEl) { console.log('toast:', msg); return; }
+    toastEl.textContent = msg;
+    toastEl.classList.add('show');
+    setTimeout(() => toastEl.classList.remove('show'), ms);
+  }
+
+  // ── COPY LINK ──
+  function copyLink() {
+    // Share current URL plus the relevant tab hash
+    const activeTab = document.querySelector('.tab-btn.active')?.dataset.tab || 'buyer';
+    const base = window.location.href.split('#')[0].split('?')[0];
+    const url = `${base}#${activeTab}`;
+    navigator.clipboard.writeText(url).then(
+      () => toast('📋 Link copied — share it with your client'),
+      () => toast('Copy failed — try manually')
+    );
+  }
+
+  // ── LABEL MAPS (for PDF / email) ──
+  const BUYER_LABELS = {
+    section_client: '── CLIENT SECTION ──',
+    b_primaryName: 'Primary Buyer – Name',
+    b_primaryEmail: 'Primary Buyer – Email',
+    b_primaryPhone: 'Primary Buyer – Phone',
+    b_secondName: 'Second Buyer – Name',
+    b_secondEmail: 'Second Buyer – Email',
+    b_secondPhone: 'Second Buyer – Phone',
+    b_location: 'Currently Based In',
+    b_occupy: 'Will Occupy Property?',
+    b_preApproval: 'Pre-Approval Obtained',
+    b_loanType: 'Loan Type',
+    b_clientNotes: 'Client Notes',
+    section_agent: '── AGENT SECTION ──',
+    b_submittalDate: 'Submittal Date',
+    b_agentName: 'Agent',
+    b_agentEmail: 'Agent Email',
+    b_propertyAddress: 'Property Address',
+    b_offerPrice: 'Offer Price',
+    b_emd: 'EMD',
+    b_downPayment: 'Down Payment',
+    b_appraisalDays: 'Appraisal Contingency (days)',
+    b_loanDays: 'Loan Contingency (days)',
+    b_ddDays: 'Due Diligence (days)',
+    b_otherContingencies: 'Other Contingencies',
+    b_closingDate: 'Closing Date',
+    b_offerExpiration: 'Offer Expiration',
+    b_escrow: 'Escrow Officer / Company',
+    b_commission: 'Commission from Seller',
+    b_sellerCC: 'Seller-Paid Closing Costs',
+    b_transactionFee: 'Transaction Fee',
+    b_warranty: 'Home Warranty Option',
+    b_warrantyCompany: 'Warranty Company & Amount',
+    b_referral: 'Is Referral?',
+    b_agentNotes: 'Agent Notes'
+  };
+  const SELLER_LABELS = {
+    section_client: '── CLIENT SECTION ──',
+    s_primaryName: 'Primary Seller – Name',
+    s_primaryEmail: 'Primary Seller – Email',
+    s_primaryPhone: 'Primary Seller – Phone',
+    s_maritalStatus: 'Marital Status',
+    s_secondName: 'Second Seller – Name',
+    s_secondEmail: 'Second Seller – Email',
+    s_secondPhone: 'Second Seller – Phone',
+    s_propertyAddress: 'Property Address',
+    s_gateCode: 'Gate Code',
+    s_occupancy: 'Occupancy Status',
+    s_propMgmt: 'Property Management Co.',
+    s_appliances: 'Appliances Included',
+    s_excluded: 'Personal Property Excluded',
+    s_utilities: 'All Utilities Active',
+    s_solar: 'Solar on Property',
+    s_repairs: 'Repairs Needed',
+    s_photos: 'Professional Photos',
+    s_photoTime: 'Preferred Photoshoot Time',
+    s_clientNotes: 'Client Notes',
+    section_agent: '── AGENT SECTION ──',
+    s_submittalDate: 'Submittal Date',
+    s_agentName: 'Listing Agent',
+    s_agentEmail: 'Agent Email',
+    s_listingStart: 'Listing Start Date',
+    s_listingDuration: 'Listing Duration',
+    s_listingPrice: 'Listing Price',
+    s_emd: 'Requested EMD',
+    s_loans: 'Loans Accepted',
+    s_loansOther: 'Other Loans Accepted',
+    s_commission: 'Commission % Total',
+    s_transactionFee: 'Transaction Fee',
+    s_referral: 'Is Referral?',
+    s_eBox: 'E-Box / Combo Box',
+    s_lockboxLocation: 'Lockbox Location',
+    s_lockboxSerial: 'Lockbox Serial / Combo',
+    s_forSaleSign: 'For Sale Sign',
+    s_hoaSign: 'HOA Specialty Sign',
+    s_signRider: 'Sign Rider',
+    s_brochureBox: 'Brochure Box',
+    s_firpta: 'FIRPTA Declaration',
+    s_1031: '1031 Exchange',
+    s_agentNotes: 'Agent Notes'
+  };
+
+  // ── COLLECT FORM DATA ──
+  function collectData(formId) {
+    const form = document.getElementById(formId);
+    if (!form) return {};
+    const fd = new FormData(form);
+    const data = {};
+    for (const [key, val] of fd.entries()) {
+      if (!val) continue;
+      if (data[key]) data[key] = [].concat(data[key], val);
+      else data[key] = val;
+    }
+    for (const k in data) if (Array.isArray(data[k])) data[k] = data[k].join(', ');
+    return data;
+  }
+
+  function fmt(key, val) {
+    if (val === '' || val === null || val === undefined) return '—';
+    const moneyKeys = ['offerPrice','emd','downPayment','sellerCC','listingPrice'];
+    if (moneyKeys.some(k => key.endsWith(k))) {
+      const n = Number(val);
+      if (!isNaN(n)) return '$' + n.toLocaleString('en-US');
+    }
+    return val;
+  }
+
+  function getSectionKeys(labels, targetSection) {
+    const keys = [];
+    let current = null;
+    for (const k of Object.keys(labels)) {
+      if (k.startsWith('section_')) {
+        current = k === 'section_client' ? 'client' : 'agent';
+        continue;
+      }
+      if (targetSection === 'all' || current === targetSection) keys.push(k);
+    }
+    return keys;
+  }
+
+  // ── SMART RESUME LINK ──
+  // Encode form data as base64 URL param; another device can open ?data=... and
+  // the form pre-fills. Works across tabs.
+  function buildResumeURL(kind) {
+    const data = collectData(kind + 'Form');
+    const payload = { k: kind, d: data };
+    const encoded = btoa(encodeURIComponent(JSON.stringify(payload)));
+    const base = window.location.href.split('#')[0].split('?')[0];
+    return `${base}?data=${encoded}#${kind}`;
+  }
+
+  function hydrateFromURL() {
+    const params = new URLSearchParams(window.location.search);
+    const raw = params.get('data');
+    if (!raw) return;
+    try {
+      const payload = JSON.parse(decodeURIComponent(atob(raw)));
+      const kind = payload.k;
+      const data = payload.d || {};
+      const form = document.getElementById(kind + 'Form');
+      if (!form) return;
+      for (const [key, val] of Object.entries(data)) {
+        const elems = form.querySelectorAll(`[name="${key}"]`);
+        if (!elems.length) continue;
+        if (elems[0].type === 'radio') {
+          elems.forEach(el => { el.checked = (el.value === val); });
+        } else if (elems[0].type === 'checkbox') {
+          const values = String(val).split(', ').map(v => v.trim());
+          elems.forEach(el => { el.checked = values.includes(el.value); });
+        } else {
+          elems[0].value = val;
+        }
+      }
+      // Jump to the relevant tab
+      if (['roi','buyer','seller'].includes(kind)) switchTab(kind, false);
+      toast('↻ Intake resumed — pick up where you left off', 3200);
+    } catch (e) {
+      console.warn('Could not hydrate from URL', e);
+    }
+  }
+
+  // ── GENERATE PDF (with fillable AcroForm fields) ──
+  function generatePDF(kind, section = 'all') {
+    const data = collectData(kind + 'Form');
+    const labels = kind === 'buyer' ? BUYER_LABELS : SELLER_LABELS;
+    const kindLabel = kind === 'buyer' ? 'Buyer Transaction Intake' : 'Seller / Listing Intake';
+    const sectionSuffix = section === 'client' ? ' — Client Section'
+                        : section === 'agent'  ? ' — Agent Section' : '';
+    const title = kindLabel + sectionSuffix;
+
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({ unit: 'pt', format: 'letter' });
+    const PAGE_W = 612, PAGE_H = 792;
+    const MARGIN = 50;
+    const contentW = PAGE_W - (MARGIN * 2);
+    let y = MARGIN;
+
+    const FOREST = [26, 46, 30];
+    const GOLD = [201, 168, 76];
+    const GOLD_LIGHT = [226, 196, 122];
+    const CREAM = [245, 240, 232];
+    const TEXT_DIM = [120, 120, 120];
+    const TEXT_DARK = [40, 40, 40];
+
+    doc.setFillColor(...FOREST);
+    doc.rect(0, 0, PAGE_W, 100, 'F');
+    doc.setFillColor(...GOLD);
+    doc.rect(0, 100, PAGE_W, 3, 'F');
+    doc.setFillColor(...GOLD);
+    doc.circle(MARGIN + 15, 50, 18, 'F');
+    doc.setFillColor(...FOREST);
+    doc.circle(MARGIN + 15, 50, 15, 'F');
+    doc.setTextColor(...GOLD);
+    doc.setFont('times', 'bold');
+    doc.setFontSize(8);
+    doc.text('K2T', MARGIN + 15, 53, { align: 'center' });
+    doc.setTextColor(...GOLD_LIGHT);
+    doc.setFont('times', 'bold');
+    doc.setFontSize(22);
+    doc.text('KEY2TEE', MARGIN + 45, 45);
+    doc.setTextColor(...CREAM);
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(9);
+    doc.text('LAS VEGAS · REAL ESTATE', MARGIN + 45, 60);
+    doc.setTextColor(...GOLD);
+    doc.setFont('times', 'italic');
+    doc.setFontSize(14);
+    doc.text(title, PAGE_W - MARGIN, 50, { align: 'right' });
+    doc.setTextColor(...CREAM);
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(8);
+    const dateStr = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+    doc.text(dateStr, PAGE_W - MARGIN, 65, { align: 'right' });
+    y = 135;
+
+    const primary = kind === 'buyer' ? data.b_primaryName : data.s_primaryName;
+    const prop = kind === 'buyer' ? data.b_propertyAddress : data.s_propertyAddress;
+    if (primary || prop) {
+      doc.setFillColor(250, 247, 240);
+      doc.rect(MARGIN, y, contentW, 50, 'F');
+      doc.setDrawColor(...GOLD);
+      doc.setLineWidth(0.5);
+      doc.line(MARGIN, y, MARGIN, y + 50);
+      doc.setTextColor(...TEXT_DIM);
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(7);
+      doc.text(kind === 'buyer' ? 'BUYER' : 'SELLER', MARGIN + 12, y + 14);
+      doc.setTextColor(...TEXT_DARK);
+      doc.setFont('times', 'bold');
+      doc.setFontSize(13);
+      doc.text(primary || '—', MARGIN + 12, y + 28);
+      if (prop) {
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(9);
+        doc.setTextColor(...TEXT_DIM);
+        const propLines = doc.splitTextToSize(prop, contentW - 24);
+        doc.text(propLines, MARGIN + 12, y + 42);
+      }
+      y += 65;
+    }
+
+    const labelKeys = Object.keys(labels);
+    doc.setDrawColor(230, 225, 215);
+    doc.setLineWidth(0.5);
+    let currentSection = null;
+
+    for (const key of labelKeys) {
+      if (key.startsWith('section_')) {
+        currentSection = key === 'section_client' ? 'client' : 'agent';
+        if (section !== 'all') continue;
+        y += 8;
+        if (y > PAGE_H - 80) { doc.addPage(); y = MARGIN; }
+        doc.setFillColor(...FOREST);
+        doc.rect(MARGIN, y, contentW, 22, 'F');
+        doc.setTextColor(...GOLD_LIGHT);
+        doc.setFont('times', 'bold');
+        doc.setFontSize(11);
+        const sectionTitle = key === 'section_client' ? 'CLIENT SECTION' : 'AGENT SECTION';
+        doc.text(sectionTitle, MARGIN + 12, y + 15);
+        y += 32;
+        continue;
+      }
+      if (section !== 'all' && currentSection !== section) continue;
+      const val = fmt(key, data[key]);
+      if (val === '—') continue;
+      const label = labels[key];
+      const labelLines = doc.splitTextToSize(label, 180);
+      const valLines = doc.splitTextToSize(String(val), contentW - 200);
+      const rowH = Math.max(labelLines.length, valLines.length) * 12 + 10;
+      if (y + rowH > PAGE_H - 70) { doc.addPage(); y = MARGIN; }
+      doc.setTextColor(...TEXT_DIM);
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(8);
+      doc.text(labelLines, MARGIN + 4, y + 8);
+      doc.setTextColor(...TEXT_DARK);
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(10);
+      doc.text(valLines, MARGIN + 195, y + 8);
+      y += rowH;
+      doc.line(MARGIN, y, PAGE_W - MARGIN, y);
+      y += 2;
+    }
+
+    const pageCount = doc.getNumberOfPages();
+    for (let i = 1; i <= pageCount; i++) {
+      doc.setPage(i);
+      doc.setDrawColor(...GOLD);
+      doc.setLineWidth(0.5);
+      doc.line(MARGIN, PAGE_H - 50, PAGE_W - MARGIN, PAGE_H - 50);
+      doc.setTextColor(...TEXT_DIM);
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(7);
+      doc.text('Brent Thomas · Key2Tee Real Estate · Douglas Elliman · License S.0186600', PAGE_W / 2, PAGE_H - 35, { align: 'center' });
+      doc.text('(702) 319-1432  ·  Las Vegas, NV', PAGE_W / 2, PAGE_H - 25, { align: 'center' });
+      doc.setTextColor(...GOLD);
+      doc.text(`Page ${i} of ${pageCount}`, PAGE_W - MARGIN, PAGE_H - 25, { align: 'right' });
+    }
+
+    const clientName = primary ? primary.trim() : '';
+    const agentName = kind === 'buyer'
+      ? (data.b_agentName ? data.b_agentName.trim() : '')
+      : (data.s_agentName ? data.s_agentName.trim() : '');
+    const kindLabelFilename = kind === 'buyer' ? 'Buyer' : 'Seller';
+    const sectionTag = section === 'client' ? 'Client' : section === 'agent' ? 'Agent' : '';
+    const titleHead = sectionTag
+      ? `Key2Tee — ${kindLabelFilename} Intake (${sectionTag})`
+      : `Key2Tee — ${kindLabelFilename} Intake`;
+    const titleParts = [titleHead];
+    if (clientName) titleParts.push(clientName);
+    if (agentName) titleParts.push(`Agent: ${agentName}`);
+    const docTitle = titleParts.join(' · ');
+    doc.setProperties({
+      title: docTitle,
+      subject: `${kindLabelFilename} transaction intake${sectionTag ? ' — ' + sectionTag : ''}`,
+      author: agentName || 'Brent Thomas',
+      creator: 'Key2Tee Real Estate'
+    });
+    const slugify = s => (s || '').toString().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+    const clientSlug = slugify(clientName);
+    const agentSlug = slugify(agentName);
+    const parts = ['key2tee', kind];
+    if (sectionTag) parts.push(sectionTag.toLowerCase());
+    if (clientSlug) parts.push(clientSlug);
+    if (agentSlug) parts.push(agentSlug);
+    parts.push(today);
+    const fname = parts.join('-') + '.pdf';
+    doc.save(fname);
+    toast('📄 PDF downloaded — open in Preview or Acrobat to edit');
+    return fname;
+  }
+
+  // ── SUBMIT (Web3Forms + PDF + smart-resume link) ──
+  async function submitForm(kind, section = 'all') {
+    const form = document.getElementById(kind + 'Form');
+    const data = collectData(kind + 'Form');
+    const labels = kind === 'buyer' ? BUYER_LABELS : SELLER_LABELS;
+    const sectionKeys = getSectionKeys(labels, section);
+
+    // Validate only the fields in this section
+    const sectionInputs = sectionKeys
+      .map(k => form.querySelector(`[name="${k}"]`))
+      .filter(Boolean);
+    for (const el of sectionInputs) {
+      if (el.hasAttribute('required') && !el.checkValidity()) {
+        el.reportValidity();
+        return;
+      }
+    }
+
+    // Guard against empty section
+    const hasAny = sectionKeys.some(k => {
+      const v = data[k];
+      return v !== undefined && v !== null && String(v).trim() !== '';
+    });
+    if (!hasAny && section !== 'all') {
+      const label = section === 'client' ? 'Client' : 'Agent';
+      toast(`Nothing to send yet — fill in the ${label} Section first.`, 3200);
+      return;
+    }
+
+    // Find the button that was clicked so we can show loading state
+    const btn = event?.target?.closest('.btn-hero, .btn') || null;
+    const btnOriginal = btn ? btn.innerHTML : null;
+    if (btn) {
+      btn.disabled = true;
+      btn.innerHTML = '<span class="big-icon">⏳</span> Sending…';
+    }
+
+    // Generate PDF locally for the user
+    generatePDF(kind, section);
+
+    // Build structured payload for Web3Forms
+    const primary = kind === 'buyer' ? data.b_primaryName : data.s_primaryName;
+    const kindLabel = kind === 'buyer' ? 'Buyer' : 'Seller';
+    const sectionTag = section === 'client' ? 'Client Submission'
+                     : section === 'agent'  ? 'Agent Submission'
+                     : 'Full Intake';
+    const subject = `[Key2Tee] ${kindLabel} ${sectionTag} — ${primary || 'Unnamed'}`;
+
+    let bodyText = `KEY2TEE — ${kindLabel.toUpperCase()} — ${sectionTag.toUpperCase()}\n`;
+    bodyText += `Submitted: ${new Date().toLocaleString('en-US')}\n`;
+    bodyText += '='.repeat(50) + '\n\n';
+    let currentSection = null;
+    for (const key of Object.keys(labels)) {
+      if (key.startsWith('section_')) {
+        currentSection = key === 'section_client' ? 'client' : 'agent';
+        if (section === 'all') bodyText += '\n' + labels[key] + '\n\n';
+        continue;
+      }
+      if (section !== 'all' && currentSection !== section) continue;
+      const val = fmt(key, data[key]);
+      if (val === '—') continue;
+      bodyText += `${labels[key]}: ${val}\n`;
+    }
+    bodyText += '\n' + '='.repeat(50) + '\n\n';
+    bodyText += `🔗 Resume this intake: ${buildResumeURL(kind)}\n\n`;
+    bodyText += 'Key2Tee · Brent Thomas · Douglas Elliman\n';
+    bodyText += '(702) 319-1432 · Las Vegas, NV\n';
+
+    // Submit to Web3Forms
+    try {
+      const payload = {
+        access_key: WEB3FORMS_KEY,
+        subject: subject,
+        from_name: 'Key2Tee Intake',
+        cc: OFFICE_EMAIL_CC,
+        message: bodyText,
+        // Include structured fields for a clean email layout
+        ...data,
+        _submission_type: `${kindLabel} ${sectionTag}`,
+      };
+      const res = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+      const json = await res.json();
+      if (json.success) {
+        toast('⛳ Sent to Brent — you\'ll hear back soon', 4000);
+      } else {
+        toast('Couldn\'t send — please email us at brentethomas81@gmail.com', 4500);
+        console.error('Web3Forms error:', json);
+      }
+    } catch (e) {
+      toast('Network error — please try again or email us', 4500);
+      console.error(e);
+    } finally {
+      if (btn) {
+        btn.disabled = false;
+        btn.innerHTML = btnOriginal;
+      }
+    }
+  }
+
+
+// ═══════════════════ ROI CALCULATOR LOGIC ═══════════════════
 // ── slider live display ──
 document.getElementById('vacancy').addEventListener('input', function() {
   document.getElementById('vacancyVal').textContent = this.value + '%';
@@ -1080,6 +2793,17 @@ window.addEventListener('load', function() {
   window.scrollTo(0, 0);
 });
 history.scrollRestoration = 'manual';
+
+// ── Toggle sticky ROI button visibility by active tab ──
+function updateStickyVisibility() {
+  const stickyEl = document.getElementById('roiStickyBtn');
+  if (!stickyEl) return;
+  const activeTab = document.querySelector('.tab-btn.active')?.dataset.tab;
+  stickyEl.style.display = (activeTab === 'roi') ? '' : 'none';
+}
+document.querySelectorAll('.tab-btn').forEach(b => b.addEventListener('click', () => setTimeout(updateStickyVisibility, 10)));
+window.addEventListener('DOMContentLoaded', updateStickyVisibility);
 </script>
+
 </body>
 </html>
