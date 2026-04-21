@@ -2126,7 +2126,8 @@
 
   // On load: honour hash fragment, and pre-fill from ?data= param if present (smart-resume link)
   window.addEventListener('DOMContentLoaded', () => {
-    const hash = (location.hash || '').replace('#', '');
+    // Handle both `#buyer` and `#buyer?data=...` formats
+    const hash = (location.hash || '').replace('#', '').split('?')[0];
     if (['roi', 'buyer', 'seller'].includes(hash)) switchTab(hash, false);
     hydrateFromURL();
   });
@@ -2280,23 +2281,45 @@
   }
 
   // ── SMART RESUME LINK ──
-  // Encode form data as base64 URL param; another device can open ?data=... and
-  // the form pre-fills. Works across tabs.
+  // Put the tab fragment FIRST so if the email client truncates the long
+  // ?data= query param, the user still lands on the right tab.
+  // URL format: .../#buyer?data=BASE64  (non-standard but browsers handle it fine
+  // because we parse it manually in hydrateFromURL)
   function buildResumeURL(kind) {
     const data = collectData(kind + 'Form');
     const payload = { k: kind, d: data };
     const encoded = btoa(encodeURIComponent(JSON.stringify(payload)));
     const base = window.location.href.split('#')[0].split('?')[0];
-    return `${base}?data=${encoded}#${kind}`;
+    return `${base}#${kind}?data=${encoded}`;
   }
 
   function hydrateFromURL() {
-    const params = new URLSearchParams(window.location.search);
-    const raw = params.get('data');
+    // Support both old format (?data=...#kind) and new format (#kind?data=...)
+    let raw = null;
+    let kindFromURL = null;
+
+    // New format: hash contains both kind and data
+    const hashStr = location.hash || '';
+    const hashMatch = hashStr.match(/^#(roi|buyer|seller)(?:\?data=(.+))?$/);
+    if (hashMatch) {
+      kindFromURL = hashMatch[1];
+      if (hashMatch[2]) raw = hashMatch[2];
+    }
+
+    // Fallback: legacy ?data= query param
+    if (!raw) {
+      const params = new URLSearchParams(window.location.search);
+      raw = params.get('data');
+    }
+
+    // If we have a kind from the hash, switch to that tab right away even if
+    // the data payload was lost to URL truncation
+    if (kindFromURL) switchTab(kindFromURL, false);
+
     if (!raw) return;
     try {
       const payload = JSON.parse(decodeURIComponent(atob(raw)));
-      const kind = payload.k;
+      const kind = payload.k || kindFromURL;
       const data = payload.d || {};
       const form = document.getElementById(kind + 'Form');
       if (!form) return;
@@ -2312,7 +2335,7 @@
           elems[0].value = val;
         }
       }
-      // Jump to the relevant tab
+      // Ensure we're on the right tab even if hash kind was missing
       if (['roi','buyer','seller'].includes(kind)) switchTab(kind, false);
       toast('↻ Intake resumed — pick up where you left off', 3200);
     } catch (e) {
