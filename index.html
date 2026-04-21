@@ -2299,7 +2299,8 @@
     let kindFromURL = null;
 
     // New format: hash contains both kind and data
-    const hashStr = location.hash || '';
+    // Browsers may URL-encode the '?' to '%3F' inside the hash, so handle both.
+    const hashStr = decodeURIComponent(location.hash || '');
     const hashMatch = hashStr.match(/^#(roi|buyer|seller)(?:\?data=(.+))?$/);
     if (hashMatch) {
       kindFromURL = hashMatch[1];
