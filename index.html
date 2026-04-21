@@ -3037,7 +3037,7 @@
           <div class="club-info-block"><strong>Course</strong>7,500-yard Tom Fazio championship layout carved into the Spring Mountains. Dramatic elevation, red-rock backdrop, and conditioning that's arguably the best in the state. Five-star experience from the first tee.</div>
           <div class="club-info-block"><strong>Amenities</strong>Stunning clubhouse with multiple dining outlets, full spa, tennis, pickleball, resort pool, fitness center, wellness. Kids' programs, event spaces, and concierge-level service throughout.</div>
           <div class="club-info-block"><strong>Social / Access</strong>The most exclusive club in Las Vegas — arguably among the top 5 most exclusive in the country. Guard-gated within Summerlin's guarded gates. Celebrity, pro-athlete, and executive membership. No photos inside. No tours. Introductions happen behind closed doors.</div>
-          <a href="https://key2tee.realgeeks.com/search/results/?community=Summerlin%20West" target="_blank" rel="noopener" class="club-homes-btn">🔍 View Homes in The Summit →</a>
+          <a href="tel:7023191432" class="club-homes-btn">📞 By Invitation · Call Brent for Summit Access →</a>
         </div></div>
       </div>
 
@@ -3271,15 +3271,15 @@
 
     <div class="community-list">
 
-      <a href="https://key2tee.realgeeks.com/search/results/?community=Summerlin%20West" target="_blank" rel="noopener" class="community-row">
+      <a href="tel:7023191432" class="community-row">
         <div class="community-rank">1</div>
         <div class="community-info">
           <div class="community-name">The Summit Club</div>
           <div class="community-meta">Summerlin · Tom Fazio · invite-only</div>
-          <div class="community-desc">Arguably the most exclusive private club in America. Guard-gated within Summerlin's gates — no photos, no tours, introductions happen behind closed doors.</div>
+          <div class="community-desc">Arguably the most exclusive private club in America. Homes here are sold off-market, agent-to-agent. <strong style="color:var(--gold);">Tap to call Brent</strong> — Summit access is by introduction only.</div>
         </div>
         <div class="community-price">$8M–$40M+</div>
-        <div class="community-arrow">→</div>
+        <div class="community-arrow">📞</div>
       </a>
 
       <a href="https://key2tee.realgeeks.com/search/results/?community=The%20Ridges" target="_blank" rel="noopener" class="community-row">
@@ -5281,8 +5281,9 @@ const GOLF_COMMUNITIES = {
     price: '$8M–$40M+',
     member: 'Private equity · invitation only',
     signature: "Arguably the most exclusive private club in the United States — guard-gated within Summerlin's gates.",
-    blurb: "The summit of Vegas luxury — literally. Tom Fazio carved this course into the Spring Mountains, and the membership list is a who's-who of celebrities, pro athletes, and executives. No photos, no tours, no guest access. If you're matched here, you already know someone.",
-    homes: 'https://key2tee.realgeeks.com/search/results/?community=Summerlin%20West'
+    blurb: "The summit of Vegas luxury — literally. Tom Fazio carved this course into the Spring Mountains, and the membership list is a who's-who of celebrities, pro athletes, and executives. No photos, no tours, no guest access. Summit homes sell off-market, agent-to-agent. Ready to make the introductions? Call Brent directly.",
+    homes: 'tel:7023191432',
+    byInvitation: true
   },
   macdonald: {
     name: 'MacDonald Highlands',
@@ -5481,13 +5482,37 @@ function golfShowResults() {
   document.getElementById('g_topBlurb').textContent      = topC.blurb;
   document.getElementById('g_topSignature').textContent  = topC.signature;
   document.getElementById('g_topMatch').textContent      = 'Match Strength: ' + top.pct + '%';
-  document.getElementById('g_topHomes').href             = topC.homes;
+
+  // Top match CTA — handle byInvitation communities (e.g., The Summit Club)
+  const topHomesBtn = document.getElementById('g_topHomes');
+  topHomesBtn.href = topC.homes;
+  if (topC.byInvitation) {
+    topHomesBtn.innerHTML = '📞 By Invitation · Call Brent for Summit Access →';
+    topHomesBtn.removeAttribute('target');
+    topHomesBtn.removeAttribute('rel');
+  } else {
+    topHomesBtn.innerHTML = '🔍 View Homes in This Community →';
+    topHomesBtn.setAttribute('target', '_blank');
+    topHomesBtn.setAttribute('rel', 'noopener');
+  }
 
   document.getElementById('g_runnerName').textContent    = runnerC.name;
   document.getElementById('g_runnerCourse').textContent  = runnerC.course + ' · ' + runnerC.architect;
   document.getElementById('g_runnerBlurb').textContent   = runnerC.blurb;
   document.getElementById('g_runnerMatch').textContent   = 'Match Strength: ' + runner.pct + '%';
-  document.getElementById('g_runnerHomes').href          = runnerC.homes;
+
+  // Runner-up CTA — handle byInvitation communities
+  const runnerHomesBtn = document.getElementById('g_runnerHomes');
+  runnerHomesBtn.href = runnerC.homes;
+  if (runnerC.byInvitation) {
+    runnerHomesBtn.innerHTML = '📞 By Invitation · Call Brent →';
+    runnerHomesBtn.removeAttribute('target');
+    runnerHomesBtn.removeAttribute('rel');
+  } else {
+    runnerHomesBtn.innerHTML = '🔍 View Homes →';
+    runnerHomesBtn.setAttribute('target', '_blank');
+    runnerHomesBtn.setAttribute('rel', 'noopener');
+  }
 
   document.getElementById('g_intake').style.display = 'none';
   document.getElementById('g_results').style.display = 'block';
