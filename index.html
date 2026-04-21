@@ -1240,6 +1240,209 @@
     margin-bottom: 18px;
   }
 
+  /* ── DISCLAIMER BOX (estimates notice) ── */
+  .disclaimer-box {
+    background: rgba(201,168,76,0.08);
+    border: 1px solid rgba(201,168,76,0.25);
+    border-left: 3px solid var(--gold);
+    border-radius: 6px;
+    padding: 12px 14px;
+    margin: 6px 0 20px;
+    font-size: 0.78rem;
+    color: var(--cream-dim);
+    line-height: 1.5;
+  }
+  .disclaimer-box strong { color: var(--gold-light); }
+
+  /* ── COUNTRY CLUBS DIRECTORY ── */
+  .cc-filter-nav {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+  .club-card {
+    background: linear-gradient(135deg, var(--forest-mid) 0%, var(--forest-light) 100%);
+    border: 1px solid rgba(201,168,76,0.25);
+    border-radius: 8px;
+    margin-bottom: 10px;
+    overflow: hidden;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .club-card.open {
+    border-color: var(--gold);
+    box-shadow: 0 6px 24px rgba(201,168,76,0.12);
+  }
+  .club-card[hidden] { display: none; }
+  .club-card-header {
+    padding: 16px 18px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .club-card-header:hover { background: rgba(201,168,76,0.05); }
+  .club-card-name { flex: 1; }
+  .club-card-name h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.2rem;
+    color: var(--gold-light);
+    letter-spacing: 0.8px;
+    font-weight: 600;
+    line-height: 1.2;
+    margin-bottom: 3px;
+  }
+  .club-meta {
+    font-size: 0.72rem;
+    color: var(--text-light);
+    letter-spacing: 0.3px;
+  }
+  .club-card-chevron {
+    color: var(--gold);
+    font-size: 0.85rem;
+    transition: transform 0.25s;
+    flex-shrink: 0;
+  }
+  .club-card.open .club-card-chevron { transform: rotate(180deg); }
+  .club-card-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+  }
+  .club-card.open .club-card-body { max-height: 1600px; }
+  .club-card-body-inner {
+    padding: 0 18px 20px;
+    border-top: 1px solid rgba(201,168,76,0.15);
+    padding-top: 16px;
+  }
+  .club-detail-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+  .club-detail-grid > div {
+    background: rgba(0,0,0,0.28);
+    border: 1px solid rgba(201,168,76,0.15);
+    border-radius: 6px;
+    padding: 10px 12px;
+  }
+  .club-detail-grid .d-label {
+    font-size: 0.58rem;
+    letter-spacing: 1.5px;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 3px;
+  }
+  .club-detail-grid .d-value {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.98rem;
+    color: var(--gold-light);
+    font-weight: 600;
+    line-height: 1.2;
+  }
+  .club-info-block {
+    font-size: 0.85rem;
+    color: var(--cream-dim);
+    line-height: 1.55;
+    margin-bottom: 10px;
+  }
+  .club-info-block strong {
+    color: var(--gold);
+    font-size: 0.68rem;
+    letter-spacing: 1.3px;
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 3px;
+  }
+  .club-homes-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--gold);
+    color: var(--forest);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.72rem;
+    letter-spacing: 1.8px;
+    text-transform: uppercase;
+    padding: 10px 18px;
+    border-radius: 6px;
+    margin-top: 6px;
+    transition: filter 0.2s;
+  }
+  .club-homes-btn:hover { filter: brightness(1.1); }
+  @media (max-width: 500px) {
+    .club-detail-grid { grid-template-columns: 1fr; }
+  }
+
+  /* ── GOLF COMMUNITIES BY PRICE ── */
+  .community-list { margin: 6px 0 12px; }
+  .community-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 16px;
+    background: linear-gradient(135deg, var(--forest-mid) 0%, var(--forest-light) 100%);
+    border: 1px solid rgba(201,168,76,0.2);
+    border-radius: 8px;
+    margin-bottom: 8px;
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.15s, border-color 0.15s, box-shadow 0.15s;
+  }
+  .community-row:hover {
+    transform: translateX(4px);
+    border-color: var(--gold);
+    box-shadow: 0 4px 16px rgba(201,168,76,0.12);
+  }
+  .community-rank {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.35rem;
+    color: var(--gold);
+    font-weight: 700;
+    width: 32px;
+    flex-shrink: 0;
+    text-align: center;
+  }
+  .community-info { flex: 1; min-width: 0; }
+  .community-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem;
+    color: var(--gold-light);
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    margin-bottom: 2px;
+    line-height: 1.2;
+  }
+  .community-meta {
+    font-size: 0.72rem;
+    color: var(--text-light);
+    letter-spacing: 0.3px;
+  }
+  .community-price {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.95rem;
+    color: var(--gold-light);
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    flex-shrink: 0;
+    text-align: right;
+  }
+  .community-arrow {
+    color: var(--gold);
+    font-size: 1.1rem;
+    flex-shrink: 0;
+  }
+  @media (max-width: 520px) {
+    .community-row { padding: 12px 12px; gap: 10px; }
+    .community-rank { width: 24px; font-size: 1.15rem; }
+    .community-name { font-size: 1rem; }
+    .community-price { font-size: 0.85rem; }
+  }
+
   /* ── SITE FOOTER (copyright / legal) ── */
   .site-footer {
     text-align: center;
@@ -1367,15 +1570,31 @@
         <span class="cat-chip">Invest</span>
       </a>
 
-      <!-- 4. Golf Community Finder -->
-      <a class="tool-card" data-tool="golf" data-cat="lifestyle">
-        <span class="icon">⛳</span>
-        <div class="name">Golf Community Finder</div>
-        <div class="desc">Answer 7 questions — we'll match you to your ideal Vegas golf community.</div>
+      <!-- 4. Country Clubs Directory -->
+      <a class="tool-card" data-tool="clubs" data-cat="lifestyle">
+        <span class="icon">🏌️</span>
+        <div class="name">Country Clubs Directory</div>
+        <div class="desc">Fees, dues, guest rates &amp; course details for every Vegas country club.</div>
         <span class="cat-chip">Lifestyle</span>
       </a>
 
-      <!-- 5. Buyer Intake -->
+      <!-- 5. Golf Communities by Price -->
+      <a class="tool-card" data-tool="communities" data-cat="lifestyle">
+        <span class="icon">🏘️</span>
+        <div class="name">Golf Communities by Price</div>
+        <div class="desc">Every Vegas golf-adjacent community, sorted high to low. One click to live listings.</div>
+        <span class="cat-chip">Lifestyle</span>
+      </a>
+
+      <!-- 6. Golf Community Finder Quiz -->
+      <a class="tool-card" data-tool="golf" data-cat="lifestyle">
+        <span class="icon">⛳</span>
+        <div class="name">Golf Community Finder Quiz</div>
+        <div class="desc">7 questions, 60 seconds — we'll match you to your ideal Vegas golf community.</div>
+        <span class="cat-chip">Lifestyle</span>
+      </a>
+
+      <!-- 7. Buyer Intake -->
       <a class="tool-card" data-tool="buyer" data-cat="buy">
         <span class="icon">🏡</span>
         <div class="name">Buyer Intake</div>
@@ -1383,7 +1602,7 @@
         <span class="cat-chip">Buy</span>
       </a>
 
-      <!-- 6. Seller Intake -->
+      <!-- 8. Seller Intake -->
       <a class="tool-card" data-tool="seller" data-cat="sell">
         <span class="icon">🔑</span>
         <div class="name">Seller Intake</div>
@@ -1391,7 +1610,7 @@
         <span class="cat-chip">Sell</span>
       </a>
 
-      <!-- 7. Mortgage Calculator -->
+      <!-- 9. Mortgage Calculator -->
       <a class="tool-card" data-tool="mortgage" data-cat="buy">
         <span class="icon">🧮</span>
         <div class="name">Mortgage Calculator</div>
@@ -1399,7 +1618,7 @@
         <span class="cat-chip">Buy</span>
       </a>
 
-      <!-- 8. 1031 Exchange Calculator -->
+      <!-- 10. 1031 Exchange Calculator -->
       <a class="tool-card" data-tool="exchange" data-cat="invest">
         <span class="icon">🔄</span>
         <div class="name">1031 Exchange Calculator</div>
@@ -1407,7 +1626,7 @@
         <span class="cat-chip">Invest</span>
       </a>
 
-      <!-- 9. Relocation Quiz -->
+      <!-- 11. Relocation Quiz -->
       <a class="tool-card" data-tool="quiz" data-cat="lifestyle">
         <span class="icon" style="line-height:1;">
           <svg viewBox="0 0 48 48" width="38" height="38" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:inline-block;vertical-align:middle;">
@@ -1427,7 +1646,7 @@
         <span class="cat-chip">Lifestyle</span>
       </a>
 
-      <!-- 10. YouTube Channel -->
+      <!-- 12. YouTube Channel -->
       <a class="tool-card external" href="https://youtube.com/@moneygolfguy?si=PCnitplbR3dMLMQw" target="_blank" rel="noopener" data-cat="lifestyle">
         <span class="icon" style="line-height:1;">
           <svg viewBox="0 0 48 34" width="46" height="32" xmlns="http://www.w3.org/2000/svg" style="display:inline-block;vertical-align:middle;filter:drop-shadow(0 2px 6px rgba(255,0,0,0.25));">
@@ -1440,7 +1659,7 @@
         <span class="cat-chip">Lifestyle</span>
       </a>
 
-      <!-- 11. Closing Cost Estimator -->
+      <!-- 13. Closing Cost Estimator -->
       <a class="tool-card" data-tool="closing" data-cat="sell">
         <span class="icon">💰</span>
         <div class="name">Closing Cost Estimator</div>
@@ -1448,7 +1667,7 @@
         <span class="cat-chip">Sell</span>
       </a>
 
-      <!-- 12. Rent vs. Buy -->
+      <!-- 14. Rent vs. Buy -->
       <a class="tool-card" data-tool="rentbuy" data-cat="buy">
         <span class="icon">⚖️</span>
         <div class="name">Rent vs. Buy</div>
@@ -2770,12 +2989,472 @@
     </p>
   </section>
 
+  <!-- ═══════════════════ COUNTRY CLUBS DIRECTORY ═══════════════════ -->
+  <section class="tab-panel" data-panel="clubs" role="tabpanel">
+    <button class="back-to-tools" data-goto="landing">← All Tools</button>
+
+    <div class="tagline">
+      <h2>Country Clubs Directory</h2>
+      <p>The private clubs of Vegas &amp; Henderson — fees, dues, guest rates, course details, and social life. Tap any club to expand.</p>
+    </div>
+
+    <div class="disclaimer-box">
+      <strong>Heads up:</strong> All joining fees, monthly dues, and guest rates are estimates based on publicly available info and past reporting. Clubs update fees regularly and don't always publish them. For current numbers, call the club directly — or <a href="tel:7023191432" style="color:var(--gold);">call Brent</a> and he'll get the real figures for you.
+    </div>
+
+    <div class="cc-filter-nav">
+      <button type="button" class="grid-cat-btn active" data-cc-filter="all">All</button>
+      <button type="button" class="grid-cat-btn" data-cc-filter="summerlin">Summerlin</button>
+      <button type="button" class="grid-cat-btn" data-cc-filter="henderson">Henderson</button>
+      <button type="button" class="grid-cat-btn" data-cc-filter="sw">SW Vegas</button>
+    </div>
+
+    <div class="club-list">
+
+      <!-- SOUTHERN HIGHLANDS -->
+      <div class="club-card" data-cc-loc="sw">
+        <div class="club-card-header">
+          <div class="club-card-name">
+            <h3>Southern Highlands Golf Club</h3>
+            <div class="club-meta">SW Vegas · Robert Trent Jones Sr. &amp; Jr. · 2000 · Homes $2M–$15M+</div>
+          </div>
+          <span class="club-card-chevron">▼</span>
+        </div>
+        <div class="club-card-body"><div class="club-card-body-inner">
+          <div class="club-detail-grid">
+            <div><div class="d-label">Joining Fee</div><div class="d-value">$150,000+ (est.)</div></div>
+            <div><div class="d-label">Monthly Dues</div><div class="d-value">~$1,800–$2,500</div></div>
+            <div><div class="d-label">Guest Rate</div><div class="d-value">Member-accompanied only</div></div>
+            <div><div class="d-label">Membership</div><div class="d-value">Private equity · invite</div></div>
+          </div>
+          <div class="club-info-block"><strong>Course</strong>7,381-yard RTJ design with parkland fairways, mature landscaping, and one of the most pristine conditioning standards in the Southwest. Hosts the Southern Highlands Collegiate each spring.</div>
+          <div class="club-info-block"><strong>Amenities</strong>Expansive clubhouse with fine dining, member lounges, tennis, pool, fitness. Limited event calendar — discretion is the amenity here.</div>
+          <div class="club-info-block"><strong>Social / Access</strong>Arguably the most exclusive golf club in Vegas. Strong celebrity and executive membership. Invitation-based — interested buyers should budget for a long introduction process.</div>
+          <a href="https://key2tee.realgeeks.com/search/results/?community=Southern%20Highlands" target="_blank" rel="noopener" class="club-homes-btn">🔍 View Homes in Southern Highlands →</a>
+        </div></div>
+      </div>
+
+      <!-- MACDONALD HIGHLANDS · DRAGONRIDGE -->
+      <div class="club-card" data-cc-loc="henderson">
+        <div class="club-card-header">
+          <div class="club-card-name">
+            <h3>DragonRidge Country Club (MacDonald Highlands)</h3>
+            <div class="club-meta">Henderson · Jay Morrish &amp; David Druzisky · 2000 · Homes $2M–$20M+</div>
+          </div>
+          <span class="club-card-chevron">▼</span>
+        </div>
+        <div class="club-card-body"><div class="club-card-body-inner">
+          <div class="club-detail-grid">
+            <div><div class="d-label">Joining Fee</div><div class="d-value">~$55,000–$85,000</div></div>
+            <div><div class="d-label">Monthly Dues</div><div class="d-value">~$1,200–$1,500</div></div>
+            <div><div class="d-label">Guest Rate</div><div class="d-value">~$175–$250 (accompanied)</div></div>
+            <div><div class="d-label">Membership</div><div class="d-value">Private · equity + non-equity</div></div>
+          </div>
+          <div class="club-info-block"><strong>Course</strong>7,200-yard championship layout carved into Black Mountain. Dramatic elevation changes, panoramic Strip views, and a signature par-3 over a canyon. Firm, fast, and played by anyone who lives in MacDonald Highlands.</div>
+          <div class="club-info-block"><strong>Amenities</strong>Full clubhouse with fine dining and casual grill, 8 tennis/pickleball courts, fitness center, spa, resort pool, private event spaces.</div>
+          <div class="club-info-block"><strong>Social / Access</strong>Active calendar of member tournaments, wine dinners, holiday events, and couples golf. Reasonable dress code enforcement. One of the more social ultra-luxury clubs in Henderson.</div>
+          <a href="https://key2tee.realgeeks.com/search/results/?community=MacDonald%20Highlands" target="_blank" rel="noopener" class="club-homes-btn">🔍 View Homes in MacDonald Highlands →</a>
+        </div></div>
+      </div>
+
+      <!-- TPC SUMMERLIN -->
+      <div class="club-card" data-cc-loc="summerlin">
+        <div class="club-card-header">
+          <div class="club-card-name">
+            <h3>TPC Summerlin</h3>
+            <div class="club-meta">Summerlin · Bobby Weed + Fuzzy Zoeller · 1991 · Homes $1M–$4M</div>
+          </div>
+          <span class="club-card-chevron">▼</span>
+        </div>
+        <div class="club-card-body"><div class="club-card-body-inner">
+          <div class="club-detail-grid">
+            <div><div class="d-label">Joining Fee</div><div class="d-value">~$100,000–$150,000</div></div>
+            <div><div class="d-label">Monthly Dues</div><div class="d-value">~$1,500–$2,000</div></div>
+            <div><div class="d-label">Guest Rate</div><div class="d-value">~$200–$250 (accompanied)</div></div>
+            <div><div class="d-label">Membership</div><div class="d-value">Private equity</div></div>
+          </div>
+          <div class="club-info-block"><strong>Course</strong>7,255-yard PGA Tour host. Immaculate conditioning year-round, strategic bunkering, and the kind of demanding tee-to-green routing that rewards shot-making. Hosts the Shriners Children's Open every fall.</div>
+          <div class="club-info-block"><strong>Amenities</strong>Classic tour-style clubhouse with member dining and pro shop. Less resort-y, more golf-focused. No tennis, no spa — the draw is the course.</div>
+          <div class="club-info-block"><strong>Social / Access</strong>The serious-golfer's club. Strong member golf calendar, tournaments, and guest days. Tour-pro access during the Shriners Open week is a real member perk.</div>
+          <a href="https://key2tee.realgeeks.com/search/results/?community=TPC%20Summerlin" target="_blank" rel="noopener" class="club-homes-btn">🔍 View Homes Near TPC Summerlin →</a>
+        </div></div>
+      </div>
+
+      <!-- RED ROCK COUNTRY CLUB -->
+      <div class="club-card" data-cc-loc="summerlin">
+        <div class="club-card-header">
+          <div class="club-card-name">
+            <h3>Red Rock Country Club</h3>
+            <div class="club-meta">Summerlin · Arnold Palmer Design · 2003 · Homes $1M–$5M+</div>
+          </div>
+          <span class="club-card-chevron">▼</span>
+        </div>
+        <div class="club-card-body"><div class="club-card-body-inner">
+          <div class="club-detail-grid">
+            <div><div class="d-label">Joining Fee</div><div class="d-value">~$40,000–$60,000</div></div>
+            <div><div class="d-label">Monthly Dues</div><div class="d-value">~$900–$1,300</div></div>
+            <div><div class="d-label">Guest Rate</div><div class="d-value">~$150–$200 (accompanied)</div></div>
+            <div><div class="d-label">Membership</div><div class="d-value">Private equity</div></div>
+          </div>
+          <div class="club-info-block"><strong>Course</strong>Two 18-hole Palmer Design courses — Mountain (bold, desert-rugged, with Red Rock backdrop) and Arroyo (tree-lined, strategic, tighter). 36 holes under one club is rare in Vegas.</div>
+          <div class="club-info-block"><strong>Amenities</strong>Stunning clubhouse with panoramic Red Rock views, multiple dining outlets, tennis, pickleball, swim/fitness complex, kids' programs.</div>
+          <div class="club-info-block"><strong>Social / Access</strong>Strongest family vibe of any Summerlin CC. Kids' junior golf, swim team, and tennis programs. Full social calendar — wine events, holiday parties, member golf.</div>
+          <a href="https://key2tee.realgeeks.com/search/results/?community=Red%20Rock%20Country%20Club" target="_blank" rel="noopener" class="club-homes-btn">🔍 View Homes in Red Rock CC →</a>
+        </div></div>
+      </div>
+
+      <!-- ANTHEM COUNTRY CLUB -->
+      <div class="club-card" data-cc-loc="henderson">
+        <div class="club-card-header">
+          <div class="club-card-name">
+            <h3>Anthem Country Club</h3>
+            <div class="club-meta">Henderson · Hale Irwin · 1999 · Homes $800K–$3M</div>
+          </div>
+          <span class="club-card-chevron">▼</span>
+        </div>
+        <div class="club-card-body"><div class="club-card-body-inner">
+          <div class="club-detail-grid">
+            <div><div class="d-label">Joining Fee</div><div class="d-value">~$30,000–$50,000</div></div>
+            <div><div class="d-label">Monthly Dues</div><div class="d-value">~$900–$1,100</div></div>
+            <div><div class="d-label">Guest Rate</div><div class="d-value">~$120–$175 (accompanied)</div></div>
+            <div><div class="d-label">Membership</div><div class="d-value">Private · equity + social</div></div>
+          </div>
+          <div class="club-info-block"><strong>Course</strong>One of Hale Irwin's early residential designs — 7,267-yard layout with rolling fairways, strategic bunkering, and one of the better-conditioned greens complexes in Henderson. Playable for all skill levels.</div>
+          <div class="club-info-block"><strong>Amenities</strong>Full amenity club — tennis (multiple courts), pickleball, resort pool, fitness center, spa, multiple dining outlets, event space. Social-only membership tier available.</div>
+          <div class="club-info-block"><strong>Social / Access</strong>Arguably the most active social calendar in Henderson — weekly events, tournaments, book clubs, cards, wine dinners. Heavy active-retiree presence, but also strong with young families and snowbirds.</div>
+          <a href="https://key2tee.realgeeks.com/search/results/?community=Anthem%20Country%20Club" target="_blank" rel="noopener" class="club-homes-btn">🔍 View Homes in Anthem Country Club →</a>
+        </div></div>
+      </div>
+
+      <!-- SPANISH TRAIL -->
+      <div class="club-card" data-cc-loc="sw">
+        <div class="club-card-header">
+          <div class="club-card-name">
+            <h3>Spanish Trail Country Club</h3>
+            <div class="club-meta">SW Vegas · Robert Trent Jones Jr. · 1985 · Homes $700K–$4M</div>
+          </div>
+          <span class="club-card-chevron">▼</span>
+        </div>
+        <div class="club-card-body"><div class="club-card-body-inner">
+          <div class="club-detail-grid">
+            <div><div class="d-label">Joining Fee</div><div class="d-value">~$25,000–$40,000</div></div>
+            <div><div class="d-label">Monthly Dues</div><div class="d-value">~$800–$1,100</div></div>
+            <div><div class="d-label">Guest Rate</div><div class="d-value">~$125–$175 (accompanied)</div></div>
+            <div><div class="d-label">Membership</div><div class="d-value">Private equity</div></div>
+          </div>
+          <div class="club-info-block"><strong>Course</strong>27 holes (three 9-hole loops: Lakes, Canyon, Sunrise) by RTJ Jr. Vegas's first RTJ Jr. design — 40+ years of mature trees, established parkland conditioning, and classic routing.</div>
+          <div class="club-info-block"><strong>Amenities</strong>Clubhouse with fine dining and grill room, tennis, swim, fitness. Less spa/resort focused, more traditional country club.</div>
+          <div class="club-info-block"><strong>Social / Access</strong>The established-Vegas play. Strong multi-generational membership — families that have been members 20+ years. Classic country club traditions intact. Dress code enforced.</div>
+          <a href="https://key2tee.realgeeks.com/search/results/?community=Spanish%20Trail" target="_blank" rel="noopener" class="club-homes-btn">🔍 View Homes in Spanish Trail →</a>
+        </div></div>
+      </div>
+
+      <!-- BEAR'S BEST (THE RIDGES) -->
+      <div class="club-card" data-cc-loc="summerlin">
+        <div class="club-card-header">
+          <div class="club-card-name">
+            <h3>Bear's Best Las Vegas (The Ridges)</h3>
+            <div class="club-meta">Summerlin · Jack Nicklaus · 2001 · Homes $1.5M–$15M+</div>
+          </div>
+          <span class="club-card-chevron">▼</span>
+        </div>
+        <div class="club-card-body"><div class="club-card-body-inner">
+          <div class="club-detail-grid">
+            <div><div class="d-label">Access Model</div><div class="d-value">Semi-private / daily-fee</div></div>
+            <div><div class="d-label">Peak Green Fee</div><div class="d-value">~$285–$350</div></div>
+            <div><div class="d-label">Twilight / Off-Peak</div><div class="d-value">~$175–$225</div></div>
+            <div><div class="d-label">Ridges Resident Rates</div><div class="d-value">Preferred pricing available</div></div>
+          </div>
+          <div class="club-info-block"><strong>Course</strong>18 holes replicating Nicklaus's favorite holes from his global portfolio — play Muirfield Village, Castle Pines, Valhalla, and more in a single round. 7,200 yards carved through desert with Red Rock as the backdrop.</div>
+          <div class="club-info-block"><strong>Amenities</strong>Upscale clubhouse with dining, pro shop, and event space. No tennis or pool — this is a golf-first facility.</div>
+          <div class="club-info-block"><strong>Social / Access</strong>Not a membership club in the traditional sense — Ridges homeowners can often arrange preferred access, otherwise it's daily-fee with premium pricing. No initiation fees required to play.</div>
+          <a href="https://key2tee.realgeeks.com/search/results/?community=The%20Ridges" target="_blank" rel="noopener" class="club-homes-btn">🔍 View Homes in The Ridges →</a>
+        </div></div>
+      </div>
+
+      <!-- CANYON GATE -->
+      <div class="club-card" data-cc-loc="summerlin">
+        <div class="club-card-header">
+          <div class="club-card-name">
+            <h3>Canyon Gate Country Club</h3>
+            <div class="club-meta">Summerlin · Ted Robinson · 1989 · Homes $700K–$2.5M</div>
+          </div>
+          <span class="club-card-chevron">▼</span>
+        </div>
+        <div class="club-card-body"><div class="club-card-body-inner">
+          <div class="club-detail-grid">
+            <div><div class="d-label">Joining Fee</div><div class="d-value">~$20,000–$35,000</div></div>
+            <div><div class="d-label">Monthly Dues</div><div class="d-value">~$700–$900</div></div>
+            <div><div class="d-label">Guest Rate</div><div class="d-value">~$100–$150 (accompanied)</div></div>
+            <div><div class="d-label">Membership</div><div class="d-value">Private equity</div></div>
+          </div>
+          <div class="club-info-block"><strong>Course</strong>Ted Robinson design with water features on 10 holes. 6,700 yards — more playable than demanding, ideal for mixed-skill groups. One of the west valley's original gated golf courses.</div>
+          <div class="club-info-block"><strong>Amenities</strong>Clubhouse with casual dining, tennis courts, pool, fitness. More modest than Red Rock or TPC but price reflects that.</div>
+          <div class="club-info-block"><strong>Social / Access</strong>Friendly, lower-key private club vibe. Strong starter-club or downsize destination. Lower initiation makes gated golf life actually attainable.</div>
+          <a href="https://key2tee.realgeeks.com/search/results/?community=Canyon%20Gate%20Country%20Club" target="_blank" rel="noopener" class="club-homes-btn">🔍 View Homes in Canyon Gate →</a>
+        </div></div>
+      </div>
+
+      <!-- REFLECTION BAY (LAKE LAS VEGAS) -->
+      <div class="club-card" data-cc-loc="henderson">
+        <div class="club-card-header">
+          <div class="club-card-name">
+            <h3>Reflection Bay Golf Club (Lake Las Vegas)</h3>
+            <div class="club-meta">Henderson · Jack Nicklaus · 1998 · Homes $600K–$10M+</div>
+          </div>
+          <span class="club-card-chevron">▼</span>
+        </div>
+        <div class="club-card-body"><div class="club-card-body-inner">
+          <div class="club-detail-grid">
+            <div><div class="d-label">Access Model</div><div class="d-value">Resort / daily-fee</div></div>
+            <div><div class="d-label">Peak Green Fee</div><div class="d-value">~$195–$295</div></div>
+            <div><div class="d-label">Off-Peak / Twilight</div><div class="d-value">~$125–$175</div></div>
+            <div><div class="d-label">Resident Rates</div><div class="d-value">Lake LV resident discounts</div></div>
+          </div>
+          <div class="club-info-block"><strong>Course</strong>The only Nicklaus Signature course in the Southwest built on a private lake. 1.5 miles of Lake Las Vegas shoreline, strategic risk/reward design. 5 holes along the water.</div>
+          <div class="club-info-block"><strong>Amenities</strong>Full-service clubhouse, shoreline dining, marina-adjacent practice facility. Part of the larger Lake Las Vegas resort ecosystem (hotels, spas, marina).</div>
+          <div class="club-info-block"><strong>Social / Access</strong>Resort play — no private membership required. Lake LV homeowners get preferred pricing. Mix of locals and destination guests; lighter on traditional club culture.</div>
+          <a href="https://key2tee.realgeeks.com/search/results/?community=Lake%20Las%20Vegas" target="_blank" rel="noopener" class="club-homes-btn">🔍 View Homes in Lake Las Vegas →</a>
+        </div></div>
+      </div>
+
+    </div>
+
+    <p class="disclaimer">
+      Key2Tee · Brent Thomas · Douglas Elliman Real Estate · License S.0186600<br>
+      <a href="tel:7023191432" style="color:var(--gold-dim);text-decoration:none;">702-319-1432</a> &nbsp;|&nbsp; Las Vegas, NV
+    </p>
+  </section>
+
+  <!-- ═══════════════════ GOLF COMMUNITIES BY PRICE ═══════════════════ -->
+  <section class="tab-panel" data-panel="communities" role="tabpanel">
+    <button class="back-to-tools" data-goto="landing">← All Tools</button>
+
+    <div class="tagline">
+      <h2>Golf Communities by Price</h2>
+      <p>Every golf-adjacent community in the Vegas Valley, sorted most expensive to least. Click any row for live listings on Key2Tee's MLS-connected search.</p>
+    </div>
+
+    <div class="disclaimer-box">
+      <strong>Heads up:</strong> Price bands are educated estimates based on recent sales, active listings, and general market data. Actual pricing shifts week to week — click through to RealGeeks for current, live listings. <a href="tel:7023191432" style="color:var(--gold);">Call Brent</a> for specific comps.
+    </div>
+
+    <div class="community-list">
+
+      <a href="https://key2tee.realgeeks.com/search/results/?community=The%20Ridges" target="_blank" rel="noopener" class="community-row">
+        <div class="community-rank">1</div>
+        <div class="community-info">
+          <div class="community-name">The Ridges</div>
+          <div class="community-meta">Summerlin · Bear's Best Las Vegas</div>
+        </div>
+        <div class="community-price">$2.5M–$15M+</div>
+        <div class="community-arrow">→</div>
+      </a>
+
+      <a href="https://key2tee.realgeeks.com/search/results/?community=Southern%20Highlands" target="_blank" rel="noopener" class="community-row">
+        <div class="community-rank">2</div>
+        <div class="community-info">
+          <div class="community-name">Southern Highlands</div>
+          <div class="community-meta">SW Vegas · Southern Highlands GC</div>
+        </div>
+        <div class="community-price">$2M–$15M+</div>
+        <div class="community-arrow">→</div>
+      </a>
+
+      <a href="https://key2tee.realgeeks.com/search/results/?community=MacDonald%20Highlands" target="_blank" rel="noopener" class="community-row">
+        <div class="community-rank">3</div>
+        <div class="community-info">
+          <div class="community-name">MacDonald Highlands</div>
+          <div class="community-meta">Henderson · DragonRidge CC</div>
+        </div>
+        <div class="community-price">$2M–$20M+</div>
+        <div class="community-arrow">→</div>
+      </a>
+
+      <a href="https://key2tee.realgeeks.com/search/results/?community=Queensridge" target="_blank" rel="noopener" class="community-row">
+        <div class="community-rank">4</div>
+        <div class="community-info">
+          <div class="community-name">Queensridge</div>
+          <div class="community-meta">Summerlin · TPC LV / established luxury</div>
+        </div>
+        <div class="community-price">$1.5M–$8M</div>
+        <div class="community-arrow">→</div>
+      </a>
+
+      <a href="https://key2tee.realgeeks.com/search/results/?community=Red%20Rock%20Country%20Club" target="_blank" rel="noopener" class="community-row">
+        <div class="community-rank">5</div>
+        <div class="community-info">
+          <div class="community-name">Red Rock Country Club</div>
+          <div class="community-meta">Summerlin · Palmer Design (36 holes)</div>
+        </div>
+        <div class="community-price">$1M–$5M+</div>
+        <div class="community-arrow">→</div>
+      </a>
+
+      <a href="https://key2tee.realgeeks.com/search/results/?community=Lake%20Las%20Vegas" target="_blank" rel="noopener" class="community-row">
+        <div class="community-rank">6</div>
+        <div class="community-info">
+          <div class="community-name">Lake Las Vegas</div>
+          <div class="community-meta">Henderson · Reflection Bay (Nicklaus)</div>
+        </div>
+        <div class="community-price">$600K–$10M+</div>
+        <div class="community-arrow">→</div>
+      </a>
+
+      <a href="https://key2tee.realgeeks.com/search/results/?community=TPC%20Summerlin" target="_blank" rel="noopener" class="community-row">
+        <div class="community-rank">7</div>
+        <div class="community-info">
+          <div class="community-name">TPC Summerlin</div>
+          <div class="community-meta">Summerlin · PGA Tour host course</div>
+        </div>
+        <div class="community-price">$1M–$4M</div>
+        <div class="community-arrow">→</div>
+      </a>
+
+      <a href="https://key2tee.realgeeks.com/search/results/?community=Spanish%20Trail" target="_blank" rel="noopener" class="community-row">
+        <div class="community-rank">8</div>
+        <div class="community-info">
+          <div class="community-name">Spanish Trail</div>
+          <div class="community-meta">SW Vegas · Spanish Trail CC (27 holes)</div>
+        </div>
+        <div class="community-price">$700K–$4M</div>
+        <div class="community-arrow">→</div>
+      </a>
+
+      <a href="https://key2tee.realgeeks.com/search/results/?community=Anthem%20Country%20Club" target="_blank" rel="noopener" class="community-row">
+        <div class="community-rank">9</div>
+        <div class="community-info">
+          <div class="community-name">Anthem Country Club</div>
+          <div class="community-meta">Henderson · Anthem CC (Hale Irwin)</div>
+        </div>
+        <div class="community-price">$800K–$3M</div>
+        <div class="community-arrow">→</div>
+      </a>
+
+      <a href="https://key2tee.realgeeks.com/search/results/?community=Canyon%20Gate%20Country%20Club" target="_blank" rel="noopener" class="community-row">
+        <div class="community-rank">10</div>
+        <div class="community-info">
+          <div class="community-name">Canyon Gate Country Club</div>
+          <div class="community-meta">Summerlin · Canyon Gate CC</div>
+        </div>
+        <div class="community-price">$700K–$2.5M</div>
+        <div class="community-arrow">→</div>
+      </a>
+
+      <a href="https://key2tee.realgeeks.com/search/results/?community=Siena" target="_blank" rel="noopener" class="community-row">
+        <div class="community-rank">11</div>
+        <div class="community-info">
+          <div class="community-name">Siena</div>
+          <div class="community-meta">Summerlin · Siena Golf Club</div>
+        </div>
+        <div class="community-price">$600K–$2M</div>
+        <div class="community-arrow">→</div>
+      </a>
+
+      <a href="https://key2tee.realgeeks.com/search/results/?community=Eagle%20Hills" target="_blank" rel="noopener" class="community-row">
+        <div class="community-rank">12</div>
+        <div class="community-info">
+          <div class="community-name">Eagle Hills</div>
+          <div class="community-meta">Summerlin · Angel Park vicinity</div>
+        </div>
+        <div class="community-price">$650K–$1.5M</div>
+        <div class="community-arrow">→</div>
+      </a>
+
+      <a href="https://key2tee.realgeeks.com/search/results/?community=Revere%20at%20Anthem" target="_blank" rel="noopener" class="community-row">
+        <div class="community-rank">13</div>
+        <div class="community-info">
+          <div class="community-name">Revere at Anthem</div>
+          <div class="community-meta">Henderson · The Revere Golf Club</div>
+        </div>
+        <div class="community-price">$550K–$1.8M</div>
+        <div class="community-arrow">→</div>
+      </a>
+
+      <a href="https://key2tee.realgeeks.com/search/results/?community=Highland%20Falls" target="_blank" rel="noopener" class="community-row">
+        <div class="community-rank">14</div>
+        <div class="community-info">
+          <div class="community-name">Highland Falls</div>
+          <div class="community-meta">Summerlin · Highland Falls GC</div>
+        </div>
+        <div class="community-price">$550K–$1.3M</div>
+        <div class="community-arrow">→</div>
+      </a>
+
+      <a href="https://key2tee.realgeeks.com/search/results/?community=Tuscany" target="_blank" rel="noopener" class="community-row">
+        <div class="community-rank">15</div>
+        <div class="community-info">
+          <div class="community-name">Tuscany Village</div>
+          <div class="community-meta">Henderson · Tuscany Golf Club</div>
+        </div>
+        <div class="community-price">$450K–$1.2M</div>
+        <div class="community-arrow">→</div>
+      </a>
+
+      <a href="https://key2tee.realgeeks.com/search/results/?community=Rhodes%20Ranch" target="_blank" rel="noopener" class="community-row">
+        <div class="community-rank">16</div>
+        <div class="community-info">
+          <div class="community-name">Rhodes Ranch</div>
+          <div class="community-meta">SW Vegas · Rhodes Ranch GC</div>
+        </div>
+        <div class="community-price">$400K–$1M</div>
+        <div class="community-arrow">→</div>
+      </a>
+
+      <a href="https://key2tee.realgeeks.com/search/results/?community=Painted%20Desert" target="_blank" rel="noopener" class="community-row">
+        <div class="community-rank">17</div>
+        <div class="community-info">
+          <div class="community-name">Painted Desert</div>
+          <div class="community-meta">NW Vegas · Painted Desert GC</div>
+        </div>
+        <div class="community-price">$400K–$900K</div>
+        <div class="community-arrow">→</div>
+      </a>
+
+      <a href="https://key2tee.realgeeks.com/search/results/?community=Silverstone%20Ranch" target="_blank" rel="noopener" class="community-row">
+        <div class="community-rank">18</div>
+        <div class="community-info">
+          <div class="community-name">Silverstone Ranch</div>
+          <div class="community-meta">NW Vegas · Silverstone Golf Club</div>
+        </div>
+        <div class="community-price">$400K–$850K</div>
+        <div class="community-arrow">→</div>
+      </a>
+
+      <a href="https://key2tee.realgeeks.com/search/results/?community=Sun%20City%20Summerlin" target="_blank" rel="noopener" class="community-row">
+        <div class="community-rank">19</div>
+        <div class="community-info">
+          <div class="community-name">Sun City Summerlin (55+)</div>
+          <div class="community-meta">Summerlin · Eagle Crest / Highland Falls / Palm Valley</div>
+        </div>
+        <div class="community-price">$400K–$900K</div>
+        <div class="community-arrow">→</div>
+      </a>
+
+      <a href="https://key2tee.realgeeks.com/search/results/?community=Aliante" target="_blank" rel="noopener" class="community-row">
+        <div class="community-rank">20</div>
+        <div class="community-info">
+          <div class="community-name">Aliante</div>
+          <div class="community-meta">North Las Vegas · Aliante Golf Club</div>
+        </div>
+        <div class="community-price">$350K–$750K</div>
+        <div class="community-arrow">→</div>
+      </a>
+
+    </div>
+
+    <p class="disclaimer">
+      Key2Tee · Brent Thomas · Douglas Elliman Real Estate · License S.0186600<br>
+      <a href="tel:7023191432" style="color:var(--gold-dim);text-decoration:none;">702-319-1432</a> &nbsp;|&nbsp; Las Vegas, NV
+    </p>
+  </section>
+
   <!-- ═══════════════════ GOLF COMMUNITY FINDER (QUIZ) ═══════════════════ -->
   <section class="tab-panel" data-panel="golf" role="tabpanel">
     <button class="back-to-tools" data-goto="landing">← All Tools</button>
 
     <div class="tagline">
-      <h2>Find Your Golf Community</h2>
+      <h2>Golf Community Finder Quiz</h2>
       <p>Seven questions. Sixty seconds. The course &amp; club that actually fits your game, your budget, and your lifestyle.</p>
     </div>
 
@@ -3456,7 +4135,7 @@
   const tabBtns = document.querySelectorAll('.tab-btn'); // legacy, may be empty
   const tabPanels = document.querySelectorAll('.tab-panel');
   const tabBadge = document.getElementById('tabBadge');
-  const VALID_TABS = ['landing','roi','buyer','seller','mortgage','closing','golf','rentbuy','quiz','exchange'];
+  const VALID_TABS = ['landing','roi','buyer','seller','mortgage','closing','golf','clubs','communities','rentbuy','quiz','exchange'];
   const badgeLabels = {
     landing: 'TOOLS',
     roi: 'SFR ROI',
@@ -3464,7 +4143,9 @@
     seller: 'SELLER FORM',
     mortgage: 'MORTGAGE',
     closing: 'CLOSING COSTS',
-    golf: 'GOLF FINDER',
+    golf: 'GOLF QUIZ',
+    clubs: 'CLUBS DIRECTORY',
+    communities: 'GOLF COMMUNITIES',
     rentbuy: 'RENT VS BUY',
     quiz: 'RELO QUIZ',
     exchange: '1031 EXCHANGE'
@@ -4509,6 +5190,22 @@ function quizInit() {
   });
 }
 quizInit();
+
+// ═══════════════════════ COUNTRY CLUBS DIRECTORY (accordion + filter) ═══════════════════════
+document.querySelectorAll('.club-card-header').forEach(header => {
+  header.addEventListener('click', () => {
+    header.parentElement.classList.toggle('open');
+  });
+});
+document.querySelectorAll('[data-cc-filter]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const filter = btn.dataset.ccFilter;
+    document.querySelectorAll('[data-cc-filter]').forEach(b => b.classList.toggle('active', b === btn));
+    document.querySelectorAll('.club-card[data-cc-loc]').forEach(card => {
+      card.hidden = !(filter === 'all' || card.dataset.ccLoc === filter);
+    });
+  });
+});
 
 // ═══════════════════════ GOLF COMMUNITY FINDER (QUIZ) ═══════════════════════
 // NOTE: Each community's "homes" URL points to the main RealGeeks site as a placeholder.
