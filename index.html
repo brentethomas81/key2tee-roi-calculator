@@ -1229,142 +1229,132 @@
   }
 
 
-  /* ============ COUNTRY CLUB CARDS — IMAGE + EXPLORE ============ */
+  /* ============ COUNTRY CLUB CARDS — PHOTO + 3-COL GRID ============ */
+
+  /* Override any prior rules — clean foundation */
   .accordion-card {
     display: grid;
     grid-template-columns: 1fr;
+    grid-template-areas:
+      "hero"
+      "head"
+      "body";
+    border: 1px solid var(--line);
+    border-bottom: none;
+    background: var(--bg);
+    overflow: hidden;
+    transition: background 0.3s;
   }
-  @media (min-width: 760px) {
-    .accordion-card {
-      grid-template-columns: 320px 1fr;
-      grid-template-rows: auto auto;
-    }
-    .accordion-card .club-hero { grid-row: 1 / 3; }
-    .accordion-card .accordion-body { grid-column: 1 / -1; border-top: 1px solid var(--line-soft); }
-  }
+  .accordion-card:last-child { border-bottom: 1px solid var(--line); }
+  .accordion-card.hidden { display: none; }
+  .accordion-card:hover { background: var(--bg-soft); }
+
   .club-hero {
+    grid-area: hero;
     width: 100%;
-    aspect-ratio: 16 / 10;
+    aspect-ratio: 4 / 3;
     background-size: cover;
     background-position: center;
     background-color: var(--bg-dark);
+    cursor: pointer;
     border-bottom: 1px solid var(--line-soft);
   }
-  @media (min-width: 760px) {
-    .club-hero { aspect-ratio: auto; min-height: 100%; border-bottom: none; border-right: 1px solid var(--line-soft); }
-  }
 
-  .accordion-head {
-    padding: 22px 24px;
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
+  .head-text {
+    grid-area: head;
+    padding: 22px 24px 4px;
     cursor: pointer;
-    transition: background 0.3s;
   }
-  @media (min-width: 760px) {
-    .accordion-head {
-      padding: 26px 28px;
-      flex-direction: row;
-      align-items: center;
-      justify-content: space-between;
-      gap: 24px;
-    }
-  }
-  .accordion-head .head-text h3 {
+  .head-text h3 {
     font-family: 'Playfair Display', serif;
     font-size: 22px;
     font-weight: 400;
     color: var(--ink);
     letter-spacing: -0.01em;
     margin-bottom: 6px;
-    line-height: 1.15;
+    line-height: 1.2;
   }
-  .accordion-head .head-text .accordion-meta {
+  .head-text .accordion-meta {
     font-size: 10px;
     font-weight: 600;
     letter-spacing: 0.2em;
     text-transform: uppercase;
     color: var(--ink-muted);
-    line-height: 1.4;
+    line-height: 1.55;
   }
 
   .explore-btn {
-    align-self: flex-start;
-    padding: 12px 22px;
-    font-size: 10px;
+    grid-area: btn;
+    margin: 14px 24px 22px;
+    padding: 9px 18px;
+    font-size: 9px;
     font-weight: 600;
-    letter-spacing: 0.3em;
+    letter-spacing: 0.28em;
     text-transform: uppercase;
-    background: var(--ink);
-    color: var(--bg);
+    background: #6ec9d9;            /* Douglas Elliman navy */
+    color: #ffffff;
     border: none;
     cursor: pointer;
-    transition: background 0.3s, gap 0.3s;
+    transition: background 0.25s, gap 0.25s;
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 10px;
     white-space: nowrap;
+    flex-shrink: 0;
+    justify-self: start;
   }
-  .explore-btn::after { content: "+"; font-size: 14px; letter-spacing: 0; transition: transform 0.3s; }
-  .accordion-card.open .explore-btn { background: var(--ink-soft); }
-  .accordion-card.open .explore-btn::after { transform: rotate(45deg); content: "+"; }
-  .explore-btn:hover { background: var(--ink-soft); gap: 14px; }
+  .explore-btn::after { content: "+"; font-size: 13px; letter-spacing: 0; transition: transform 0.3s; color: #ffffff; }
+  .explore-btn:hover { background: #55b8cc; gap: 14px; }
+  .accordion-card.open .explore-btn { background: #3fa5bb; }
+  .accordion-card.open .explore-btn::after { transform: rotate(45deg); }
 
-  /* Hide the old plus-icon chevron since we now have the Explore button */
   .accordion-toggle { display: none; }
 
-  .accordion-card {
-    border: 1px solid var(--line);
-    border-bottom: none;
-    background: var(--bg);
-    transition: background 0.3s;
-  }
-  .accordion-card:last-child { border-bottom: 1px solid var(--line); }
-  .accordion-card.hidden { display: none; }
-  .accordion-head {
-    padding: 26px 28px;
-    display: grid;
-    grid-template-columns: 1fr auto auto;
-    align-items: center;
-    gap: 24px;
-    cursor: pointer;
-    transition: background 0.3s;
-  }
-  .accordion-head:hover { background: var(--bg-soft); }
-  .accordion-head h3 {
-    font-family: 'Playfair Display', serif;
-    font-size: 22px;
-    font-weight: 400;
-    color: var(--ink);
-    letter-spacing: -0.01em;
-  }
-  .accordion-meta {
-    font-size: 10px;
-    font-weight: 600;
-    letter-spacing: 0.25em;
-    text-transform: uppercase;
-    color: var(--ink-muted);
-    white-space: nowrap;
-  }
-  .accordion-toggle {
-    width: 28px;
-    height: 28px;
-    border: 1px solid var(--line);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--ink);
-    font-size: 14px;
-    transition: transform 0.3s;
-  }
-  .accordion-card.open .accordion-toggle { transform: rotate(45deg); }
   .accordion-body {
+    grid-area: body;
     max-height: 0;
     overflow: hidden;
     transition: max-height 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+    border-top: 1px solid var(--line-soft);
   }
   .accordion-card.open .accordion-body { max-height: 2000px; }
+
+  /* ── DESKTOP: 3-column grid — image | content | button ── */
+  @media (min-width: 760px) {
+    .accordion-card {
+      grid-template-columns: 280px 1fr auto;
+      grid-template-areas:
+        "hero head btn"
+        "body body body";
+      align-items: center;
+    }
+    .club-hero {
+      aspect-ratio: auto;
+      height: 100%;
+      min-height: 160px;
+      border-bottom: none;
+      border-right: 1px solid var(--line-soft);
+    }
+    .head-text { padding: 22px 28px; }
+    .explore-btn {
+      margin: 0 28px 0 0;
+      justify-self: end;
+      align-self: center;
+      padding: 10px 20px;
+    }
+  }
+
+  @media (min-width: 1000px) {
+    .accordion-card { grid-template-columns: 320px 1fr auto; }
+    .head-text h3 { font-size: 24px; }
+  }
+
+  /* ── Small phones — full-width button so it's easy to tap ── */
+  @media (max-width: 520px) {
+    .explore-btn { justify-self: stretch; margin-left: 20px; margin-right: 20px; }
+    .head-text { padding: 20px 20px 2px; }
+  }
   .accordion-inner {
     padding: 0 28px 32px;
   }
@@ -3107,14 +3097,12 @@
     </div>
     <div class="club-list">
       <div class="accordion-card" data-cc-loc="summerlin">
-        <div class="club-hero" style="background-image: url('https://images.unsplash.com/photo-1587174486073-ae5e5cff23aa?w=640&q=80');" onclick="toggleAccordion(this.parentElement)"></div>
-        <div class="accordion-head" onclick="toggleAccordion(this.parentElement)">
-          <div class="head-text">
-            <h3>The Summit Club</h3>
-            <div class="accordion-meta">Summerlin · Tom Fazio · 2015 · Homes $8M–$40M+</div>
-          </div>
-          <button class="explore-btn" onclick="event.stopPropagation(); toggleAccordion(this.closest('.accordion-card'));">Explore</button>
+        <div class="club-hero" style="background-image: url('https://images.unsplash.com/photo-1587174486073-ae5e5cff23aa?w=600&q=80&auto=format&fit=crop');" onclick="toggleAccordion(this.parentElement)"></div>
+        <div class="head-text" onclick="toggleAccordion(this.parentElement)">
+          <h3>The Summit Club</h3>
+          <div class="accordion-meta">Summerlin · Tom Fazio · 2015 · Homes $8M–$40M+</div>
         </div>
+        <button class="explore-btn" onclick="event.stopPropagation(); toggleAccordion(this.closest('.accordion-card'));">Explore</button>
         <div class="accordion-body">
           <div class="accordion-inner">
             <div class="club-meta-grid"></div>
@@ -3124,14 +3112,12 @@
         </div>
       </div>
       <div class="accordion-card" data-cc-loc="sw">
-        <div class="club-hero" style="background-image: url('https://images.unsplash.com/photo-1592919505780-303950717480?w=640&q=80');" onclick="toggleAccordion(this.parentElement)"></div>
-        <div class="accordion-head" onclick="toggleAccordion(this.parentElement)">
-          <div class="head-text">
-            <h3>Southern Highlands Golf Club</h3>
-            <div class="accordion-meta">SW Vegas · Robert Trent Jones Sr. &amp; Jr. · 2000 · Homes $2M–$15M+</div>
-          </div>
-          <button class="explore-btn" onclick="event.stopPropagation(); toggleAccordion(this.closest('.accordion-card'));">Explore</button>
+        <div class="club-hero" style="background-image: url('https://images.unsplash.com/photo-1709525616662-8d9f9a995ceb?w=600&q=80&auto=format&fit=crop');" onclick="toggleAccordion(this.parentElement)"></div>
+        <div class="head-text" onclick="toggleAccordion(this.parentElement)">
+          <h3>Southern Highlands Golf Club</h3>
+          <div class="accordion-meta">SW Vegas · Robert Trent Jones Sr. &amp; Jr. · 2000 · Homes $2M–$15M+</div>
         </div>
+        <button class="explore-btn" onclick="event.stopPropagation(); toggleAccordion(this.closest('.accordion-card'));">Explore</button>
         <div class="accordion-body">
           <div class="accordion-inner">
             <div class="club-meta-grid"></div>
@@ -3141,14 +3127,12 @@
         </div>
       </div>
       <div class="accordion-card" data-cc-loc="henderson">
-        <div class="club-hero" style="background-image: url('https://images.unsplash.com/photo-1535131749006-b7f58c99034b?w=640&q=80');" onclick="toggleAccordion(this.parentElement)"></div>
-        <div class="accordion-head" onclick="toggleAccordion(this.parentElement)">
-          <div class="head-text">
-            <h3>DragonRidge Country Club (MacDonald Highlands)</h3>
-            <div class="accordion-meta">Henderson · Jay Morrish &amp; David Druzisky · 2000 · Homes $2M–$20M+</div>
-          </div>
-          <button class="explore-btn" onclick="event.stopPropagation(); toggleAccordion(this.closest('.accordion-card'));">Explore</button>
+        <div class="club-hero" style="background-image: url('https://images.unsplash.com/photo-1767950470198-c9cd97f8ed87?w=600&q=80&auto=format&fit=crop');" onclick="toggleAccordion(this.parentElement)"></div>
+        <div class="head-text" onclick="toggleAccordion(this.parentElement)">
+          <h3>DragonRidge Country Club (MacDonald Highlands)</h3>
+          <div class="accordion-meta">Henderson · Jay Morrish &amp; David Druzisky · 2000 · Homes $2M–$20M+</div>
         </div>
+        <button class="explore-btn" onclick="event.stopPropagation(); toggleAccordion(this.closest('.accordion-card'));">Explore</button>
         <div class="accordion-body">
           <div class="accordion-inner">
             <div class="club-meta-grid"></div>
@@ -3158,14 +3142,12 @@
         </div>
       </div>
       <div class="accordion-card" data-cc-loc="summerlin">
-        <div class="club-hero" style="background-image: url('https://images.unsplash.com/photo-1605833556294-ea5c7a74f57d?w=640&q=80');" onclick="toggleAccordion(this.parentElement)"></div>
-        <div class="accordion-head" onclick="toggleAccordion(this.parentElement)">
-          <div class="head-text">
-            <h3>TPC Summerlin</h3>
-            <div class="accordion-meta">Summerlin · Bobby Weed + Fuzzy Zoeller · 1991 · Homes $1M–$4M</div>
-          </div>
-          <button class="explore-btn" onclick="event.stopPropagation(); toggleAccordion(this.closest('.accordion-card'));">Explore</button>
+        <div class="club-hero" style="background-image: url('https://images.unsplash.com/photo-1696104470342-b1ed3afe8381?w=600&q=80&auto=format&fit=crop');" onclick="toggleAccordion(this.parentElement)"></div>
+        <div class="head-text" onclick="toggleAccordion(this.parentElement)">
+          <h3>TPC Summerlin</h3>
+          <div class="accordion-meta">Summerlin · Bobby Weed + Fuzzy Zoeller · 1991 · Homes $1M–$4M</div>
         </div>
+        <button class="explore-btn" onclick="event.stopPropagation(); toggleAccordion(this.closest('.accordion-card'));">Explore</button>
         <div class="accordion-body">
           <div class="accordion-inner">
             <div class="club-meta-grid"></div>
@@ -3175,14 +3157,12 @@
         </div>
       </div>
       <div class="accordion-card" data-cc-loc="summerlin">
-        <div class="club-hero" style="background-image: url('https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=640&q=80');" onclick="toggleAccordion(this.parentElement)"></div>
-        <div class="accordion-head" onclick="toggleAccordion(this.parentElement)">
-          <div class="head-text">
-            <h3>Red Rock Country Club</h3>
-            <div class="accordion-meta">Summerlin · Arnold Palmer Design · 2003 · Homes $1M–$5M+</div>
-          </div>
-          <button class="explore-btn" onclick="event.stopPropagation(); toggleAccordion(this.closest('.accordion-card'));">Explore</button>
+        <div class="club-hero" style="background-image: url('https://images.unsplash.com/photo-1530028828-25e8270793c5?w=600&q=80&auto=format&fit=crop');" onclick="toggleAccordion(this.parentElement)"></div>
+        <div class="head-text" onclick="toggleAccordion(this.parentElement)">
+          <h3>Red Rock Country Club</h3>
+          <div class="accordion-meta">Summerlin · Arnold Palmer Design · 2003 · Homes $1M–$5M+</div>
         </div>
+        <button class="explore-btn" onclick="event.stopPropagation(); toggleAccordion(this.closest('.accordion-card'));">Explore</button>
         <div class="accordion-body">
           <div class="accordion-inner">
             <div class="club-meta-grid"></div>
@@ -3192,14 +3172,12 @@
         </div>
       </div>
       <div class="accordion-card" data-cc-loc="henderson">
-        <div class="club-hero" style="background-image: url('https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=640&q=80');" onclick="toggleAccordion(this.parentElement)"></div>
-        <div class="accordion-head" onclick="toggleAccordion(this.parentElement)">
-          <div class="head-text">
-            <h3>Anthem Country Club</h3>
-            <div class="accordion-meta">Henderson · Hale Irwin · 1999 · Homes $800K–$3M</div>
-          </div>
-          <button class="explore-btn" onclick="event.stopPropagation(); toggleAccordion(this.closest('.accordion-card'));">Explore</button>
+        <div class="club-hero" style="background-image: url('https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=600&q=80&auto=format&fit=crop');" onclick="toggleAccordion(this.parentElement)"></div>
+        <div class="head-text" onclick="toggleAccordion(this.parentElement)">
+          <h3>Anthem Country Club</h3>
+          <div class="accordion-meta">Henderson · Hale Irwin · 1999 · Homes $800K–$3M</div>
         </div>
+        <button class="explore-btn" onclick="event.stopPropagation(); toggleAccordion(this.closest('.accordion-card'));">Explore</button>
         <div class="accordion-body">
           <div class="accordion-inner">
             <div class="club-meta-grid"></div>
@@ -3209,14 +3187,12 @@
         </div>
       </div>
       <div class="accordion-card" data-cc-loc="sw">
-        <div class="club-hero" style="background-image: url('https://images.unsplash.com/photo-1580741569126-df7a1d06ea50?w=640&q=80');" onclick="toggleAccordion(this.parentElement)"></div>
-        <div class="accordion-head" onclick="toggleAccordion(this.parentElement)">
-          <div class="head-text">
-            <h3>Spanish Trail Country Club</h3>
-            <div class="accordion-meta">SW Vegas · Robert Trent Jones Jr. · 1985 · Homes $700K–$4M</div>
-          </div>
-          <button class="explore-btn" onclick="event.stopPropagation(); toggleAccordion(this.closest('.accordion-card'));">Explore</button>
+        <div class="club-hero" style="background-image: url('https://images.unsplash.com/photo-1592937238247-cd0090e02f65?w=600&q=80&auto=format&fit=crop');" onclick="toggleAccordion(this.parentElement)"></div>
+        <div class="head-text" onclick="toggleAccordion(this.parentElement)">
+          <h3>Spanish Trail Country Club</h3>
+          <div class="accordion-meta">SW Vegas · Robert Trent Jones Jr. · 1985 · Homes $700K–$4M</div>
         </div>
+        <button class="explore-btn" onclick="event.stopPropagation(); toggleAccordion(this.closest('.accordion-card'));">Explore</button>
         <div class="accordion-body">
           <div class="accordion-inner">
             <div class="club-meta-grid"></div>
@@ -3226,14 +3202,12 @@
         </div>
       </div>
       <div class="accordion-card" data-cc-loc="henderson">
-        <div class="club-hero" style="background-image: url('https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=640&q=80');" onclick="toggleAccordion(this.parentElement)"></div>
-        <div class="accordion-head" onclick="toggleAccordion(this.parentElement)">
-          <div class="head-text">
-            <h3>SouthShore Country Club</h3>
-            <div class="accordion-meta">Henderson · Lake Las Vegas · Jack Nicklaus · 1996 · Homes $1M–$10M+</div>
-          </div>
-          <button class="explore-btn" onclick="event.stopPropagation(); toggleAccordion(this.closest('.accordion-card'));">Explore</button>
+        <div class="club-hero" style="background-image: url('https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=600&q=80&auto=format&fit=crop');" onclick="toggleAccordion(this.parentElement)"></div>
+        <div class="head-text" onclick="toggleAccordion(this.parentElement)">
+          <h3>SouthShore Country Club</h3>
+          <div class="accordion-meta">Henderson · Lake Las Vegas · Jack Nicklaus · 1996 · Homes $1M–$10M+</div>
         </div>
+        <button class="explore-btn" onclick="event.stopPropagation(); toggleAccordion(this.closest('.accordion-card'));">Explore</button>
         <div class="accordion-body">
           <div class="accordion-inner">
             <div class="club-meta-grid"></div>
@@ -3243,14 +3217,12 @@
         </div>
       </div>
       <div class="accordion-card" data-cc-loc="central">
-        <div class="club-hero" style="background-image: url('https://images.unsplash.com/photo-1556912173-3bb406ef7e77?w=640&q=80');" onclick="toggleAccordion(this.parentElement)"></div>
-        <div class="accordion-head" onclick="toggleAccordion(this.parentElement)">
-          <div class="head-text">
-            <h3>Las Vegas Country Club</h3>
-            <div class="accordion-meta">Central LV · Edmund Ault · 1967 · Homes $700K–$3M+</div>
-          </div>
-          <button class="explore-btn" onclick="event.stopPropagation(); toggleAccordion(this.closest('.accordion-card'));">Explore</button>
+        <div class="club-hero" style="background-image: url('https://images.unsplash.com/photo-1556912173-3bb406ef7e77?w=600&q=80&auto=format&fit=crop');" onclick="toggleAccordion(this.parentElement)"></div>
+        <div class="head-text" onclick="toggleAccordion(this.parentElement)">
+          <h3>Las Vegas Country Club</h3>
+          <div class="accordion-meta">Central LV · Edmund Ault · 1967 · Homes $700K–$3M+</div>
         </div>
+        <button class="explore-btn" onclick="event.stopPropagation(); toggleAccordion(this.closest('.accordion-card'));">Explore</button>
         <div class="accordion-body">
           <div class="accordion-inner">
             <div class="club-meta-grid"></div>
@@ -3260,14 +3232,12 @@
         </div>
       </div>
       <div class="accordion-card" data-cc-loc="summerlin">
-        <div class="club-hero" style="background-image: url('https://images.unsplash.com/photo-1560520653-9e0e4c89eb11?w=640&q=80');" onclick="toggleAccordion(this.parentElement)"></div>
-        <div class="accordion-head" onclick="toggleAccordion(this.parentElement)">
-          <div class="head-text">
-            <h3>Bear's Best Las Vegas (The Ridges)</h3>
-            <div class="accordion-meta">Summerlin · Jack Nicklaus · 2001 · Homes $1.5M–$15M+</div>
-          </div>
-          <button class="explore-btn" onclick="event.stopPropagation(); toggleAccordion(this.closest('.accordion-card'));">Explore</button>
+        <div class="club-hero" style="background-image: url('https://images.unsplash.com/photo-1613977257363-707ba9348227?w=600&q=80&auto=format&fit=crop');" onclick="toggleAccordion(this.parentElement)"></div>
+        <div class="head-text" onclick="toggleAccordion(this.parentElement)">
+          <h3>Bear's Best Las Vegas (The Ridges)</h3>
+          <div class="accordion-meta">Summerlin · Jack Nicklaus · 2001 · Homes $1.5M–$15M+</div>
         </div>
+        <button class="explore-btn" onclick="event.stopPropagation(); toggleAccordion(this.closest('.accordion-card'));">Explore</button>
         <div class="accordion-body">
           <div class="accordion-inner">
             <div class="club-meta-grid"></div>
@@ -3277,14 +3247,12 @@
         </div>
       </div>
       <div class="accordion-card" data-cc-loc="summerlin">
-        <div class="club-hero" style="background-image: url('https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=640&q=80');" onclick="toggleAccordion(this.parentElement)"></div>
-        <div class="accordion-head" onclick="toggleAccordion(this.parentElement)">
-          <div class="head-text">
-            <h3>Canyon Gate Country Club</h3>
-            <div class="accordion-meta">Summerlin · Ted Robinson · 1989 · Homes $700K–$2.5M</div>
-          </div>
-          <button class="explore-btn" onclick="event.stopPropagation(); toggleAccordion(this.closest('.accordion-card'));">Explore</button>
+        <div class="club-hero" style="background-image: url('https://images.unsplash.com/photo-1538648759472-7251f7cb2c2f?w=600&q=80&auto=format&fit=crop');" onclick="toggleAccordion(this.parentElement)"></div>
+        <div class="head-text" onclick="toggleAccordion(this.parentElement)">
+          <h3>Canyon Gate Country Club</h3>
+          <div class="accordion-meta">Summerlin · Ted Robinson · 1989 · Homes $700K–$2.5M</div>
         </div>
+        <button class="explore-btn" onclick="event.stopPropagation(); toggleAccordion(this.closest('.accordion-card'));">Explore</button>
         <div class="accordion-body">
           <div class="accordion-inner">
             <div class="club-meta-grid"></div>
