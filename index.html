@@ -135,14 +135,26 @@
     background: #55b8cc;
   }
 
-  /* ── Mobile nav (≤960px) — Elliman logo drops to its own row ── */
+  /* ── Mobile nav (≤960px) — each nav group stacks on its own centered row ── */
   @media (max-width: 960px) {
     .site-nav {
       padding: 14px 20px 12px;
       row-gap: 12px;
+      justify-content: center;
     }
-    .nav-left { order: 1; flex: 0 0 auto; }
-    .nav-right { order: 2; flex: 0 0 auto; gap: 16px; }
+    .nav-left {
+      order: 1;
+      flex: 0 0 100%;
+      width: 100%;
+      justify-content: center;
+    }
+    .nav-right {
+      order: 2;
+      flex: 0 0 100%;
+      width: 100%;
+      justify-content: center;
+      gap: 18px;
+    }
     .elliman-center {
       order: 3;
       flex: 0 0 100%;
