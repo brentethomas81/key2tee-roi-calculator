@@ -1464,7 +1464,19 @@
   .community-cta:hover { background: var(--ink); color: var(--bg); }
   @media (max-width: 640px) {
     .community-row { grid-template-columns: 36px 1fr; row-gap: 16px; }
-    .community-cta { grid-column: 1 / -1; text-align: center; }
+    .community-cta {
+      grid-column: 1 / -1;
+      text-align: center;
+      white-space: normal;           /* allow wrapping on mobile */
+      line-height: 1.5;
+      letter-spacing: 0.2em;         /* slightly tighter to fit more per line */
+      padding: 12px 14px;
+      display: block;
+      word-break: break-word;
+    }
+  }
+  @media (max-width: 420px) {
+    .community-cta { font-size: 9px; letter-spacing: 0.18em; }
   }
 
   /* ============ QUIZ STYLES ============ */
